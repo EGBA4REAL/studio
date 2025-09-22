@@ -19,7 +19,7 @@ export default async function DashboardLayout({
   }
 
   const levels = await getLevels();
-  const classesByLevel = await Promise.all(
+  const levelsWithData = await Promise.all(
     levels.map(async (level) => {
       const classes = await getClassesByLevel(level.id);
       const subjectsByClass = await Promise.all(
