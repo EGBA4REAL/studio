@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -30,7 +31,7 @@ function SubmitButton() {
 
 export function LessonQA({ lessonContent }: { lessonContent: string }) {
   const initialState = { answer: null, error: null };
-  const [state, formAction] = useFormState(askQuestionAction, initialState);
+  const [state, formAction] = useActionState(askQuestionAction, initialState);
 
   return (
     <Card className="bg-muted/30">
