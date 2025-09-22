@@ -1,13 +1,15 @@
 'use server';
 
 import { createSession, deleteSession } from '@/lib/auth';
-import { getTopicById } from '@/lib/curriculum-api';
+import { getTopicById, updateTopicContent } from '@/lib/curriculum-api';
 import { redirect } from 'next/navigation';
 import { generateQuizFromLesson } from '@/ai/flows/generate-quiz-from-lesson';
 import { answerLessonQuestion } from '@/ai/flows/answer-lesson-question';
 import { explainIncorrectAnswer } from '@/ai/flows/explain-incorrect-answer';
 import type { GenerateStudyPlanInput } from '@/ai/flows/generate-study-plan';
 import { generateStudyPlan } from '@/ai/flows/generate-study-plan';
+import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
+import { revalidatePath } from 'next/cache';
 
 export async function signIn() {
   await createSession();
@@ -17,6 +19,24 @@ export async function signIn() {
 export async function signOut() {
   await deleteSession();
   redirect('/');
+}
+
+export async function generateLessonAction(formData: FormData) {
+  const topicId = formData.get('topicId') as string;
+  const topicTitle = formData.get('topicTitle') as string;
+
+  if (!topicId || !topicTitle) {
+    throw new Error('Topic ID and title are required');
+  }
+
+  try {
+    const { lessonContent } = await generateLessonFromTitle({ topicTitle });
+    await updateTopicContent(topicId, lessonContent);
+    revalidatePath(`/dashboard/topic/${topicId}/lesson`);
+  } catch (error) {
+    console.error('Failed to generate lesson:', error);
+    // You could redirect with an error param here if you want to show a message
+  }
 }
 
 export async function generateQuizAction(formData: FormData) {

@@ -1,28 +1,27 @@
-import { getTopicById, getSubjectById, getClassById, getLevelById, updateTopicContent } from '@/lib/curriculum-api';
+import { getTopicById, getSubjectById, getClassById, getLevelById } from '@/lib/curriculum-api';
 import { notFound } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import type { BreadcrumbItem } from '@/lib/types';
 import { QuizGenForm } from '@/components/quiz/quiz-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
-import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
-import { revalidatePath } from 'next/cache';
+import { AlertCircle, FileText, Loader2, Sparkles } from 'lucide-react';
 import { LessonQA } from '@/components/qa/lesson-qa';
+import { Button } from '@/components/ui/button';
+import { generateLessonAction } from '@/app/actions';
 
-async function generateAndSaveLesson(topicId: string, title: string) {
-  'use server';
-  try {
-    const { lessonContent } = await generateLessonFromTitle({ topicTitle: title });
-    await updateTopicContent(topicId, lessonContent);
-    revalidatePath(`/dashboard/topic/${topicId}/lesson`);
-    return lessonContent;
-  } catch (error) {
-    console.error('Failed to generate lesson:', error);
-    return null;
-  }
+function GenerateLessonForm({ topicId, topicTitle }: { topicId: string; topicTitle: string }) {
+  return (
+    <form action={generateLessonAction} className="space-y-4 text-center">
+      <input type="hidden" name="topicId" value={topicId} />
+      <input type="hidden" name="topicTitle" value={topicTitle} />
+      <Button type="submit" size="lg">
+        <Sparkles className="mr-2 h-5 w-5" />
+        Generate Lesson with AI
+      </Button>
+    </form>
+  );
 }
-
 
 export default async function LessonPage({
   params,
@@ -31,17 +30,9 @@ export default async function LessonPage({
   params: { topicId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  let topic = await getTopicById(params.topicId);
+  const topic = await getTopicById(params.topicId);
   if (!topic) {
     notFound();
-  }
-
-  let lessonContent = topic.lessonContent;
-  if (lessonContent.includes('Lesson content coming soon')) {
-    const newContent = await generateAndSaveLesson(topic.id, topic.title);
-    if(newContent) {
-      lessonContent = newContent;
-    }
   }
 
   const subject = await getSubjectById(topic.subjectId);
@@ -58,6 +49,7 @@ export default async function LessonPage({
   breadcrumbs.push({ label: 'Lesson', href: `/dashboard/topic/${topic.id}/lesson` });
 
   const showError = searchParams?.error === 'generation_failed';
+  const showPlaceholder = topic.lessonContent.includes('Lesson content coming soon');
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -68,31 +60,49 @@ export default async function LessonPage({
         <h1 className="text-3xl md:text-4xl font-headline font-bold">{topic.title}</h1>
       </div>
 
-      <Card>
-        <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: lessonContent }} />
-      </Card>
-      
-      <div className="py-6">
-        <LessonQA lessonContent={lessonContent} />
-      </div>
+      {showPlaceholder ? (
+         <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline">
+                    <FileText className="w-6 h-6 text-primary" />
+                    Lesson Content
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="text-center py-12">
+                <p className="text-muted-foreground mb-6">
+                    This lesson hasn&apos;t been generated yet. Click the button below to create it using AI.
+                </p>
+                <GenerateLessonForm topicId={topic.id} topicTitle={topic.title} />
+            </CardContent>
+         </Card>
+      ) : (
+        <>
+            <Card>
+                <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: topic.lessonContent }} />
+            </Card>
+            
+            <div className="py-6">
+                <LessonQA lessonContent={topic.lessonContent} />
+            </div>
 
-
-      <div className="text-center py-6 space-y-4">
-        <h2 className="text-2xl font-headline font-semibold">Ready to test your knowledge?</h2>
-        <p className="text-muted-foreground">
-          Click the button below to generate a unique quiz based on this lesson.
-        </p>
-        {showError && (
-            <Alert variant="destructive" className="text-left">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Quiz Generation Failed</AlertTitle>
-                <AlertDescription>
-                    There was an error generating the quiz. Please try again later.
-                </AlertDescription>
-            </Alert>
-        )}
-        <QuizGenForm topicId={topic.id} />
-      </div>
+            <div className="text-center py-6 space-y-4">
+                <h2 className="text-2xl font-headline font-semibold">Ready to test your knowledge?</h2>
+                <p className="text-muted-foreground">
+                Click the button below to generate a unique quiz based on this lesson.
+                </p>
+                {showError && (
+                    <Alert variant="destructive" className="text-left">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Quiz Generation Failed</AlertTitle>
+                        <AlertDescription>
+                            There was an error generating the quiz. Please try again later.
+                        </AlertDescription>
+                    </Alert>
+                )}
+                <QuizGenForm topicId={topic.id} />
+            </div>
+        </>
+      )}
     </div>
   );
 }
