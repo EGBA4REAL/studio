@@ -19,7 +19,7 @@ export function BreadcrumbNav({ items }: BreadcrumbNavProps) {
     <Breadcrumb>
       <BreadcrumbList>
         {items.map((item, index) => (
-          <React.Fragment key={item.href}>
+          <React.Fragment key={`${item.href}-${item.label}`}>
             <BreadcrumbItem>
               {index === items.length - 1 ? (
                 <BreadcrumbPage className="font-semibold">{item.label}</BreadcrumbPage>
