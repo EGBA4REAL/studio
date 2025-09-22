@@ -5,6 +5,9 @@ import { getTopicById } from '@/lib/curriculum-api';
 import { redirect } from 'next/navigation';
 import { generateQuizFromLesson } from '@/ai/flows/generate-quiz-from-lesson';
 import { answerLessonQuestion } from '@/ai/flows/answer-lesson-question';
+import { explainIncorrectAnswer } from '@/ai/flows/explain-incorrect-answer';
+import type { GenerateStudyPlanInput } from '@/ai/flows/generate-study-plan';
+import { generateStudyPlan } from '@/ai/flows/generate-study-plan';
 
 export async function signIn() {
   await createSession();
@@ -75,4 +78,42 @@ export async function askQuestionAction(prevState: any, formData: FormData) {
       error: 'Sorry, I was unable to get an answer. Please try again.'
     }
   }
+}
+
+export async function getExplanationAction(prevState: any, formData: FormData) {
+    const lessonContent = formData.get('lessonContent') as string;
+    const question = formData.get('question') as string;
+    const selectedAnswer = formData.get('selectedAnswer') as string;
+    const correctAnswer = formData.get('correctAnswer') as string;
+
+    if (!lessonContent || !question || !selectedAnswer || !correctAnswer) {
+        return { error: "Missing required fields for explanation." };
+    }
+
+    try {
+        const { explanation } = await explainIncorrectAnswer({
+            lessonContent,
+            question,
+            selectedAnswer,
+            correctAnswer
+        });
+        return { explanation };
+    } catch(e) {
+        console.error("Error getting explanation", e);
+        return { error: "Could not load explanation." }
+    }
+}
+
+export async function getStudyPlanAction(input: GenerateStudyPlanInput) {
+    if (input.score / input.totalQuestions > 0.7 && input.score !== input.totalQuestions) {
+        return { studyPlan: "<p>Great job! You have a good understanding of the material. Review the topics where you made mistakes to master the concepts.</p>" }
+    }
+
+    try {
+        const { studyPlan } = await generateStudyPlan(input);
+        return { studyPlan };
+    } catch(e) {
+        console.error("Error generating study plan", e);
+        return { error: "Could not generate study plan." }
+    }
 }

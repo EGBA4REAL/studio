@@ -47,7 +47,38 @@ export default async function QuizPage({
                     <AlertTitle>Error Loading Quiz</AlertTitle>
                     <AlertDescription>
                     There was a problem loading the quiz data. It might be invalid or corrupted.
-                    </AlertDescription>
+                    </Aidebar-accent-foreground
+    );
+  }
+}
+
+export {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupAction,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInput,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarSeparator,
+  SidebarTrigger,
+  useSidebar,
+}
+ltDescription>
                 </Alert>
                 <Button asChild className="mt-6">
                     <Link href={`/dashboard/topic/${topic.id}`}>Go Back to Topic</Link>
@@ -60,7 +91,7 @@ export default async function QuizPage({
 
   return (
     <div className="w-full">
-      <QuizClient quiz={quiz} topicId={params.topicId} />
+      <QuizClient quiz={quiz} topic={topic} />
     </div>
   );
 }

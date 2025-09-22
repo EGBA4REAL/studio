@@ -39,7 +39,8 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateLessonFromTitleOutputSchema},
   prompt: `You are an expert curriculum developer for Nigerian schools. Your task is to generate comprehensive lesson content in HTML format based on a given topic title.
 
-  The lesson should be structured with headings (h1, h2), paragraphs (p), and lists (ul, ol, li) to be engaging and easy to understand for the target student.
+  - The lesson should be structured with headings (h1, h2), paragraphs (p), and lists (ul, ol, li) to be engaging and easy to understand for the target student.
+  - Include clear explanations, simple examples, and analogies where appropriate to make the concepts easier to grasp.
 
   Topic Title: {{{topicTitle}}}
 
