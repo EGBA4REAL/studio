@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
 import { revalidatePath } from 'next/cache';
+import { LessonQA } from '@/components/qa/lesson-qa';
 
 async function generateAndSaveLesson(topicId: string, title: string) {
   'use server';
@@ -70,6 +71,11 @@ export default async function LessonPage({
       <Card>
         <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: lessonContent }} />
       </Card>
+      
+      <div className="py-6">
+        <LessonQA lessonContent={lessonContent} />
+      </div>
+
 
       <div className="text-center py-6 space-y-4">
         <h2 className="text-2xl font-headline font-semibold">Ready to test your knowledge?</h2>
