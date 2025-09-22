@@ -122,7 +122,14 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
       setIsAnswered(false);
     } else {
       setIsFinished(true);
-      generateStudyPlan(score, results);
+      const finalScore = score + (currentQuestion.options[selectedOptionIndex!].isCorrect ? (results.some(r => r.question === currentQuestion.question) ? 0 : 1) : 0);
+      const finalResults = [...results, {
+        question: currentQuestion.question,
+        selectedAnswer: currentQuestion.options[selectedOptionIndex!].text,
+        correctAnswer: currentQuestion.options.find(o => o.isCorrect)?.text || "",
+        isCorrect: currentQuestion.options[selectedOptionIndex!].isCorrect
+      }];
+      generateStudyPlan(finalScore, finalResults);
     }
   };
   
@@ -141,6 +148,12 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
     if(!isAnswered) return null;
     return results[currentQuestionIndex];
   }, [isAnswered, currentQuestionIndex, results]);
+
+  useEffect(() => {
+    if(isFinished) {
+      generateStudyPlan(score, results);
+    }
+  }, [isFinished])
 
   if (isFinished) {
     const percentage = Math.round((score / totalQuestions) * 100);
