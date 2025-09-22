@@ -1,3 +1,58 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "level-nursery",
+      "description": "Children playing with blocks",
+      "imageUrl": "https://picsum.photos/seed/nursery/400/300",
+      "imageHint": "children play"
+    },
+    {
+      "id": "level-primary",
+      "description": "Children in a classroom raising hands",
+      "imageUrl": "https://picsum.photos/seed/primary/400/300",
+      "imageHint": "children classroom"
+    },
+    {
+      "id": "level-secondary",
+      "description": "Teenagers studying together in a library",
+      "imageUrl": "https://picsum.photos/seed/secondary/400/300",
+      "imageHint": "teenagers study"
+    },
+    {
+      "id": "subject-mathematics",
+      "description": "Chalkboard with math equations",
+      "imageUrl": "https://picsum.photos/seed/math/400/300",
+      "imageHint": "mathematics chalkboard"
+    },
+    {
+      "id": "subject-english",
+      "description": "Open book with letters floating out",
+      "imageUrl": "https://picsum.photos/seed/english/400/300",
+      "imageHint": "book letters"
+    },
+    {
+      "id": "subject-basic-science",
+      "description": "Microscope and beakers in a lab",
+      "imageUrl": "https://picsum.photos/seed/science/400/300",
+      "imageHint": "science lab"
+    },
+    {
+      "id": "subject-social-studies",
+      "description": "A globe showing different countries",
+      "imageUrl": "https://picsum.photos/seed/social/400/300",
+      "imageHint": "world globe"
+    },
+    {
+      "id": "subject-civic-education",
+      "description": "A gavel and a law book",
+      "imageUrl": "https://picsum.photos/seed/civic/400/300",
+      "imageHint": "law justice"
+    },
+    {
+      "id": "subject-computer-science",
+      "description": "A person typing on a laptop with code on the screen",
+      "imageUrl": "https://picsum.photos/seed/computer/400/300",
+      "imageHint": "computer code"
+    }
+  ]
 }
