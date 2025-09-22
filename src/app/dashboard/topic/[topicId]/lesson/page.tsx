@@ -5,7 +5,7 @@ import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import type { BreadcrumbItem } from '@/lib/types';
 import { QuizGenForm } from '@/components/quiz/quiz-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, FileText, Loader2, Sparkles } from 'lucide-react';
+import { AlertCircle, FileText, Sparkles } from 'lucide-react';
 import { LessonQA } from '@/components/qa/lesson-qa';
 import { Button } from '@/components/ui/button';
 import { generateLessonAction } from '@/app/actions';
