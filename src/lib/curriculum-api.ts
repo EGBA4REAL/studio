@@ -34,3 +34,11 @@ export async function getTopicsBySubject(subjectId: string): Promise<Topic[]> {
 export async function getTopicById(topicId: string): Promise<Topic | undefined> {
     return Promise.resolve(topics.find(t => t.id === topicId));
 }
+
+export async function updateTopicContent(topicId: string, newContent: string): Promise<void> {
+  const topicIndex = topics.findIndex(t => t.id === topicId);
+  if (topicIndex !== -1) {
+    topics[topicIndex].lessonContent = newContent;
+  }
+  return Promise.resolve();
+}

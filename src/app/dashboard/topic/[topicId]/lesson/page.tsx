@@ -1,4 +1,4 @@
-import { getTopicById, getSubjectById, getClassById, getLevelById } from '@/lib/curriculum-api';
+import { getTopicById, getSubjectById, getClassById, getLevelById, updateTopicContent } from '@/lib/curriculum-api';
 import { notFound } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
@@ -6,6 +6,22 @@ import type { BreadcrumbItem } from '@/lib/types';
 import { QuizGenForm } from '@/components/quiz/quiz-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
+import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
+import { revalidatePath } from 'next/cache';
+
+async function generateAndSaveLesson(topicId: string, title: string) {
+  'use server';
+  try {
+    const { lessonContent } = await generateLessonFromTitle({ topicTitle: title });
+    await updateTopicContent(topicId, lessonContent);
+    revalidatePath(`/dashboard/topic/${topicId}/lesson`);
+    return lessonContent;
+  } catch (error) {
+    console.error('Failed to generate lesson:', error);
+    return null;
+  }
+}
+
 
 export default async function LessonPage({
   params,
@@ -14,9 +30,17 @@ export default async function LessonPage({
   params: { topicId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const topic = await getTopicById(params.topicId);
+  let topic = await getTopicById(params.topicId);
   if (!topic) {
     notFound();
+  }
+
+  let lessonContent = topic.lessonContent;
+  if (lessonContent.includes('Lesson content coming soon')) {
+    const newContent = await generateAndSaveLesson(topic.id, topic.title);
+    if(newContent) {
+      lessonContent = newContent;
+    }
   }
 
   const subject = await getSubjectById(topic.subjectId);
@@ -44,7 +68,7 @@ export default async function LessonPage({
       </div>
 
       <Card>
-        <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: topic.lessonContent }} />
+        <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: lessonContent }} />
       </Card>
 
       <div className="text-center py-6 space-y-4">
