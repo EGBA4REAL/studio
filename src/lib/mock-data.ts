@@ -75,25 +75,53 @@ export const subjects: Subject[] = [
 ];
 
 export const topics: Topic[] = [
-  // Primary 1 Mathematics
-  { id: 'topic-m1p1-1', subjectId: 'math-p1', week: 1, title: 'Counting and Writing Numbers 1-20', lessonContent: '<h1>Learning to Count</h1><p>This lesson teaches how to count and write numbers from 1 to 20.</p>', studyMaterials: [], completed: true },
-  { id: 'topic-m1p1-2', subjectId: 'math-p1', week: 2, title: 'Simple Addition up to 10', lessonContent: '<h1>Simple Addition</h1><p>Learn how to add two numbers with a sum up to 10.</p>', studyMaterials: [], completed: false },
-  { id: 'topic-m1p1-3', subjectId: 'math-p1', week: 3, title: 'Simple Subtraction from 10', lessonContent: '<h1>Simple Subtraction</h1><p>Learn how to subtract a number from another, with numbers up to 10.</p>', studyMaterials: [], completed: false },
-
   // Primary 1 English
-  { id: 'topic-e1p1-1', subjectId: 'eng-p1', week: 1, title: 'The English Alphabet (A-Z)', lessonContent: '<h1>The Alphabet</h1><p>Learn to recognize, say, and write the letters of the English alphabet.</p>', studyMaterials: [], completed: true },
-  { id: 'topic-e1p1-2', subjectId: 'eng-p1', week: 2, title: 'Reading and Writing Two-letter words', lessonContent: '<h1>Two-Letter Words</h1><p>Practice reading and writing simple two-letter words like "is", "it", "in", "on", "of".</p>', studyMaterials: [], completed: false },
-  { id: 'topic-e1p1-3', subjectId: 'eng-p1', week: 3, title: 'Introducing Nouns (Naming words)', lessonContent: '<h1>What is a Noun?</h1><p>Learn that nouns are words we use to name people, places, animals, and things.</p>', studyMaterials: [], completed: false },
-  
-  // Primary 4 Mathematics
-  { id: 'topic-m4-1', subjectId: 'math-p4', week: 1, title: 'Numbers and Numeration up to 10,000', lessonContent: '<h1>Numbers up to 10,000</h1><p>This week, we will learn about place value, counting, and writing numbers up to 10,000.</p>', studyMaterials: [], completed: true },
-  { id: 'topic-m4-2', subjectId: 'math-p4', week: 2, title: 'Addition and Subtraction of Whole Numbers', lessonContent: '<h1>Adding and Subtracting</h1><p>This lesson covers adding and subtracting large numbers, including borrowing and carrying over.</p>', studyMaterials: [], completed: false },
-  { id: 'topic-m4-3', subjectId: 'math-p4', week: 3, title: 'Multiplication of Whole Numbers', lessonContent: '<h1>Multiplication</h1><p>We will explore multiplication tables and multiplying 2-digit numbers by 2-digit numbers.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w1', subjectId: 'eng-p1', week: 1, title: 'Phonics (animal sounds)', lessonContent: '<h1>Phonics (animal sounds)</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w2', subjectId: 'eng-p1', week: 2, title: 'Phonemics Awareness', lessonContent: '<h1>Phonemics Awareness</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w3', subjectId: 'eng-p1', week: 3, title: 'Rhyming Words', lessonContent: '<h1>Rhyming Words</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w4', subjectId: 'eng-p1', week: 4, title: 'Building Rhyming Word family', lessonContent: '<h1>Building Rhyming Word family</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w5', subjectId: 'eng-p1', week: 5, title: 'Matching of words and Figures', lessonContent: '<h1>Matching of words and Figures</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w6', subjectId: 'eng-p1', week: 6, title: 'Identification and pronunciation of words', lessonContent: '<h1>Identification and pronunciation of words</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w7', subjectId: 'eng-p1', week: 7, title: 'Mid-Term Test', lessonContent: '<h1>Mid-Term Test</h1><p>This week is for the mid-term test.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w8', subjectId: 'eng-p1', week: 8, title: 'Blending sound of letters to form words', lessonContent: '<h1>Blending sound of letters to form words</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w9', subjectId: 'eng-p1', week: 9, title: 'Phonics', lessonContent: '<h1>Phonics</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p1-w10', subjectId: 'eng-p1', week: 10, title: 'Identification and Pronunciation of names of objects', lessonContent: '<h1>Identification and Pronunciation of names of objects</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
 
+  // Primary 1 Mathematics
+  { id: 'topic-math-p1-w1', subjectId: 'math-p1', week: 1, title: 'Whole Number', lessonContent: '<h1>Whole Number</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w2', subjectId: 'math-p1', week: 2, title: 'Whole Number 11 - 20', lessonContent: '<h1>Whole Number 11 - 20</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w3', subjectId: 'math-p1', week: 3, title: 'Counting and Writing of Numbers', lessonContent: '<h1>Counting and Writing of Numbers</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w4', subjectId: 'math-p1', week: 4, title: 'Counting of number (21 - 30)', lessonContent: '<h1>Counting of number (21 - 30)</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w5', subjectId: 'math-p1', week: 5, title: 'Identification of number from 31 - 40', lessonContent: '<h1>Identification of number from 31 - 40</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w6', subjectId: 'math-p1', week: 6, title: 'Ordering of Number 10', lessonContent: '<h1>Ordering of Number 10</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w7', subjectId: 'math-p1', week: 7, title: 'Mid-Term Test', lessonContent: '<h1>Mid-Term Test</h1><p>This week is for the mid-term test.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w8', subjectId: 'math-p1', week: 8, title: 'Identification and reading of number 6 - 9, 9 - 6', lessonContent: '<h1>Identification and reading of number 6 - 9, 9 - 6</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w9', subjectId: 'math-p1', week: 9, title: 'Addition of whole numbers', lessonContent: '<h1>Addition of whole numbers</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p1-w10', subjectId: 'math-p1', week: 10, title: 'Comparison and ordering of Number', lessonContent: '<h1>Comparison and ordering of Number</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  
   // Primary 4 English
-  { id: 'topic-e4p4-1', subjectId: 'eng-p4', week: 1, title: 'Reading Comprehension: Folktales', lessonContent: '<h1>Reading Folktales</h1><p>Read and understand a short folktale, and answer questions about it.</p>', studyMaterials: [], completed: false },
-  { id: 'topic-e4p4-2', subjectId: 'eng-p4', week: 2, title: 'Grammar: Verbs and Tenses', lessonContent: '<h1>Verbs and Tenses</h1><p>Learn about action words (verbs) and how they change for past, present, and future actions.</p>', studyMaterials: [], completed: false },
-  { id: 'topic-e4p4-3', subjectId: 'eng-p4', week: 3, title: 'Composition: Writing a Simple Letter', lessonContent: '<h1>Letter Writing</h1><p>Learn the parts of a simple letter and practice writing one to a friend or family member.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w1', subjectId: 'eng-p4', week: 1, title: 'Revision', lessonContent: '<h1>Revision</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w2', subjectId: 'eng-p4', week: 2, title: 'Speech work', lessonContent: '<h1>Speech work</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w3', subjectId: 'eng-p4', week: 3, title: 'Narration of real life story', lessonContent: '<h1>Narration of real life story</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w4', subjectId: 'eng-p4', week: 4, title: 'Structure: the using of \'can\' or \'may\'', lessonContent: '<h1>Structure: the using of \'can\' or \'may\'</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w5', subjectId: 'eng-p4', week: 5, title: 'Vocabulary on transportation', lessonContent: '<h1>Vocabulary on transportation</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w6', subjectId: 'eng-p4', week: 6, title: 'Further practice in the use of tense', lessonContent: '<h1>Further practice in the use of tense</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w7', subjectId: 'eng-p4', week: 7, title: 'Summative Test', lessonContent: '<h1>Summative Test</h1><p>This week is for the summative test.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w8', subjectId: 'eng-p4', week: 8, title: 'Good morals', lessonContent: '<h1>Good morals</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w9', subjectId: 'eng-p4', week: 9, title: 'Composition', lessonContent: '<h1>Composition</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-eng-p4-w10', subjectId: 'eng-p4', week: 10, title: 'Revision', lessonContent: '<h1>Revision</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+
+  // Primary 4 Mathematics
+  { id: 'topic-math-p4-w1', subjectId: 'math-p4', week: 1, title: 'Revision', lessonContent: '<h1>Revision</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w2', subjectId: 'math-p4', week: 2, title: 'Whole numbers', lessonContent: '<h1>Whole numbers</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w3', subjectId: 'math-p4', week: 3, title: 'Whole numbers skip counting', lessonContent: '<h1>Whole numbers skip counting</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w4', subjectId: 'math-p4', week: 4, title: 'Whole numbers', lessonContent: '<h1>Whole numbers</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w5', subjectId: 'math-p4', week: 5, title: 'Roman numerals', lessonContent: '<h1>Roman numerals</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w6', subjectId: 'math-p4', week: 6, title: 'Basic operations', lessonContent: '<h1>Basic operations</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w7', subjectId: 'math-p4', week: 7, title: 'Summative Test', lessonContent: '<h1>Summative Test</h1><p>This week is for the summative test.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w8', subjectId: 'math-p4', week: 8, title: 'Multiplication', lessonContent: '<h1>Multiplication</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w9', subjectId: 'math-p4', week: 9, title: 'Whole Numbers', lessonContent: '<h1>Whole Numbers</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
+  { id: 'topic-math-p4-w10', subjectId: 'math-p4', week: 10, title: 'Lowest common multiple & Highest common multiple', lessonContent: '<h1>Lowest common multiple & Highest common multiple</h1><p>Lesson content coming soon.</p>', studyMaterials: [], completed: false },
   
   // Primary 4 Basic Science
   { id: 'topic-s4p4-1', subjectId: 'sci-p4', week: 1, title: 'Living and Non-Living Things', lessonContent: '<h1>Living vs. Non-Living</h1><p>Learn to identify the characteristics of living things and differentiate them from non-living things.</p>', studyMaterials: [], completed: false },
