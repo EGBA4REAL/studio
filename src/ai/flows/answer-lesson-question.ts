@@ -11,20 +11,20 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { AnswerLessonQuestionInput, AnswerLessonQuestionOutput } from '@/lib/types';
 
-const AnswerLessonQuestionInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  userQuestion: z.string().describe("The user's question about the lesson."),
-});
-
-const AnswerLessonQuestionOutputSchema = z.object({
-  answer: z
-    .string()
-    .describe("The generated answer to the user's question in HTML format."),
-});
-
 export async function answerLessonQuestion(
   input: AnswerLessonQuestionInput
 ): Promise<AnswerLessonQuestionOutput> {
+  const AnswerLessonQuestionInputSchema = z.object({
+    lessonContent: z.string().describe('The HTML content of the lesson.'),
+    userQuestion: z.string().describe("The user's question about the lesson."),
+  });
+
+  const AnswerLessonQuestionOutputSchema = z.object({
+    answer: z
+      .string()
+      .describe("The generated answer to the user's question in HTML format."),
+  });
+
   const ai = genkit({
     plugins: [googleAI()],
     model: 'googleai/gemini-2.5-flash',

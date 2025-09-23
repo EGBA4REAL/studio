@@ -11,28 +11,28 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { ExplainIncorrectAnswerInput, ExplainIncorrectAnswerOutput } from '@/lib/types';
 
-const ExplainIncorrectAnswerInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  question: z
-    .string()
-    .describe('The quiz question that was answered incorrectly.'),
-  selectedAnswer: z
-    .string()
-    .describe('The incorrect answer the user selected.'),
-  correctAnswer: z.string().describe('The correct answer for the question.'),
-});
-
-const ExplainIncorrectAnswerOutputSchema = z.object({
-  explanation: z
-    .string()
-    .describe(
-      'A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'
-    ),
-});
-
 export async function explainIncorrectAnswer(
   input: ExplainIncorrectAnswerInput
 ): Promise<ExplainIncorrectAnswerOutput> {
+  const ExplainIncorrectAnswerInputSchema = z.object({
+    lessonContent: z.string().describe('The HTML content of the lesson.'),
+    question: z
+      .string()
+      .describe('The quiz question that was answered incorrectly.'),
+    selectedAnswer: z
+      .string()
+      .describe('The incorrect answer the user selected.'),
+    correctAnswer: z.string().describe('The correct answer for the question.'),
+  });
+
+  const ExplainIncorrectAnswerOutputSchema = z.object({
+    explanation: z
+      .string()
+      .describe(
+        'A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'
+      ),
+  });
+
   const ai = genkit({
     plugins: [googleAI()],
     model: 'googleai/gemini-2.5-flash',
