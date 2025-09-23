@@ -119,7 +119,7 @@ export default async function LessonPage({
         <>
             <Card>
                 <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: displayContent }} />
-                {isFreeUser && <UpgradePromptCard />}
+                {isFreeUser && !showPlaceholder && <UpgradePromptCard />}
             </Card>
             
             { !isFreeUser && (
