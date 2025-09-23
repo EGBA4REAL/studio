@@ -7,10 +7,10 @@
  * - generateLessonFromTitle - A function that generates lesson content.
  */
 
-import {genkit, z} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateLessonFromTitleInput, GenerateLessonFromTitleOutput } from '@/lib/types';
-import { GenerateLessonFromTitleInputSchema, GenerateLessonFromTitleOutputSchema } from '@/lib/types';
+import { GenerateLessonFromTitleInputSchema, GenerateLessonFromTitleOutputSchema } from '@/lib/schemas';
 
 export async function generateLessonFromTitle(
   input: GenerateLessonFromTitleInput

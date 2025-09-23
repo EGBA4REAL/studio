@@ -7,10 +7,10 @@
  * - generateStudyPlan - A function that generates a study plan.
  */
 
-import {genkit, z} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateStudyPlanInput, GenerateStudyPlanOutput } from '@/lib/types';
-import { GenerateStudyPlanInputSchema, GenerateStudyPlanOutputSchema } from '@/lib/types';
+import { GenerateStudyPlanInputSchema, GenerateStudyPlanOutputSchema } from '@/lib/schemas';
 
 export async function generateStudyPlan(
   input: GenerateStudyPlanInput

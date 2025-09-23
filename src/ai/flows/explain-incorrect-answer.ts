@@ -7,10 +7,10 @@
  * - explainIncorrectAnswer - A function that generates an explanation.
  */
 
-import {genkit, z} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { ExplainIncorrectAnswerInput, ExplainIncorrectAnswerOutput } from '@/lib/types';
-import { ExplainIncorrectAnswerInputSchema, ExplainIncorrectAnswerOutputSchema } from '@/lib/types';
+import { ExplainIncorrectAnswerInputSchema, ExplainIncorrectAnswerOutputSchema } from '@/lib/schemas';
 
 export async function explainIncorrectAnswer(
   input: ExplainIncorrectAnswerInput

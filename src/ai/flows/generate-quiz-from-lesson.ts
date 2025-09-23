@@ -7,10 +7,10 @@
  * - generateQuizFromLesson - A function that generates a quiz from lesson content.
  */
 
-import {genkit, z} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateQuizFromLessonInput, GenerateQuizFromLessonOutput } from '@/lib/types';
-import { GenerateQuizFromLessonInputSchema, GenerateQuizFromLessonOutputSchema } from '@/lib/types';
+import { GenerateQuizFromLessonInputSchema, GenerateQuizFromLessonOutputSchema } from '@/lib/schemas';
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput

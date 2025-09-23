@@ -7,10 +7,10 @@
  * - answerLessonQuestion - A function that answers a user's question.
  */
 
-import {genkit, z} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { AnswerLessonQuestionInput, AnswerLessonQuestionOutput } from '@/lib/types';
-import { AnswerLessonQuestionInputSchema, AnswerLessonQuestionOutputSchema } from '@/lib/types';
+import { AnswerLessonQuestionInputSchema, AnswerLessonQuestionOutputSchema } from '@/lib/schemas';
 
 
 export async function answerLessonQuestion(
