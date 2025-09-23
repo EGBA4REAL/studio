@@ -9,37 +9,31 @@
 
 import {getAi} from '@/ai/genkit';
 import {z} from 'genkit';
-import {
+import type {
   AnswerLessonQuestionInput,
   AnswerLessonQuestionOutput,
 } from '@/lib/types';
 
+const AnswerLessonQuestionInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  userQuestion: z.string().describe("The user's question about the lesson."),
+});
+
+const AnswerLessonQuestionOutputSchema = z.object({
+  answer: z
+    .string()
+    .describe("The generated answer to the user's question in HTML format."),
+});
 
 export async function answerLessonQuestion(
   input: AnswerLessonQuestionInput
 ): Promise<AnswerLessonQuestionOutput> {
-  return answerLessonQuestionFlow(input);
-}
-
-const answerLessonQuestionFlow = async (input: AnswerLessonQuestionInput) => {
-    const ai = await getAi();
-
-    const AnswerLessonQuestionInputSchema = z.object({
-        lessonContent: z
-            .string()
-            .describe('The HTML content of the lesson.'),
-        userQuestion: z.string().describe("The user's question about the lesson."),
-    });
-
-    const AnswerLessonQuestionOutputSchema = z.object({
-        answer: z.string().describe('The generated answer to the user\'s question in HTML format.'),
-    });
-
-    const prompt = ai.definePrompt({
-        name: 'answerLessonQuestionPrompt',
-        input: {schema: AnswerLessonQuestionInputSchema},
-        output: {schema: AnswerLessonQuestionOutputSchema},
-        prompt: `You are an expert tutor for Nigerian students. Your task is to answer a student's question based on the provided lesson content.
+  const ai = await getAi();
+  const prompt = ai.definePrompt({
+    name: 'answerLessonQuestionPrompt',
+    input: {schema: AnswerLessonQuestionInputSchema},
+    output: {schema: AnswerLessonQuestionOutputSchema},
+    prompt: `You are an expert tutor for Nigerian students. Your task is to answer a student's question based on the provided lesson content.
 
   - Your answer must be based *only* on the information within the provided lesson content.
   - If the question cannot be answered from the lesson content, politely state that you cannot answer and that the question is outside the scope of the current lesson.
@@ -53,19 +47,19 @@ const answerLessonQuestionFlow = async (input: AnswerLessonQuestionInput) => {
 
   Generate the answer now.
   `,
-    });
+  });
 
-    const flow = ai.defineFlow(
+  const flow = ai.defineFlow(
     {
-        name: 'answerLessonQuestionFlow',
-        inputSchema: AnswerLessonQuestionInputSchema,
-        outputSchema: AnswerLessonQuestionOutputSchema,
+      name: 'answerLessonQuestionFlow',
+      inputSchema: AnswerLessonQuestionInputSchema,
+      outputSchema: AnswerLessonQuestionOutputSchema,
     },
-    async (input: AnswerLessonQuestionInput) => {
-        const {output} = await prompt(input);
-        return output!;
+    async (flowInput: AnswerLessonQuestionInput) => {
+      const {output} = await prompt(flowInput);
+      return output!;
     }
-    );
+  );
 
-    return flow(input);
+  return await flow(input);
 }
