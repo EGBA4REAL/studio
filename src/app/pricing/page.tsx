@@ -8,32 +8,36 @@ import { AuthButton } from '@/components/auth/auth-button';
 const tiers = [
     {
         name: 'Daily',
-        price: '₦5,000',
+        price: '₦5000',
         period: '/day',
         features: ['Full Access for 24 Hours', 'AI Tutor', 'Generate Unlimited Quizzes'],
         cta: 'Choose Daily',
+        href: '#' // Replace with your Paystack link
     },
     {
         name: 'Weekly',
-        price: '₦10,000',
+        price: '₦10000',
         period: '/week',
         features: ['7 Days Full Access', 'All Daily Features', 'Save materials offline'],
         cta: 'Choose Weekly',
+        href: '#' // Replace with your Paystack link
     },
     {
         name: 'Monthly',
-        price: '₦20,000',
+        price: '₦20000',
         period: '/month',
         features: ['Full Month Access', 'All Weekly Features', 'Priority Support'],
         cta: 'Choose Monthly',
         popular: true,
+        href: '#' // Replace with your Paystack link
     },
     {
         name: 'Yearly',
-        price: '₦240,000',
+        price: '₦240000',
         period: '/year',
         features: ['Full Year Access', 'All Monthly Features', 'Join Collaborative Chat'],
         cta: 'Choose Yearly',
+        href: '#' // Replace with your Paystack link
     },
 ];
 
@@ -81,8 +85,8 @@ export default function PricingPage() {
                                         ))}
                                     </ul>
                                     <div className="mt-auto">
-                                        <Button className="w-full" variant={tier.popular ? 'default' : 'outline'}>
-                                            {tier.cta}
+                                        <Button className="w-full" asChild variant={tier.popular ? 'default' : 'outline'}>
+                                            <Link href={tier.href}>{tier.cta}</Link>
                                         </Button>
                                     </div>
                                 </CardContent>
