@@ -33,7 +33,7 @@ export async function generateLessonAction(formData: FormData) {
     const { lessonContent } = await generateLessonFromTitle({ topicTitle });
     await updateTopicContent(topicId, lessonContent);
     revalidatePath(`/dashboard/topic/${topicId}/lesson`);
-  } catch (error) => {
+  } catch (error) {
     console.error('Failed to generate lesson:', error);
     // You could redirect with an error param here if you want to show a message
   }
