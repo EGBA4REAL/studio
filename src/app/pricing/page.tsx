@@ -79,6 +79,7 @@ export default function PricingPage() {
                                                 <Check className="w-5 h-5 text-green-500" />
                                                 <span>{feature}</span>
                                             </li>
+
                                         ))}
                                     </ul>
                                     <div className="mt-auto">
