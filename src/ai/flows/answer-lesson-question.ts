@@ -6,11 +6,21 @@
  *
  * - answerLessonQuestion - A function that answers a user's question.
  */
-
+import { z } from 'zod';
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { AnswerLessonQuestionInput, AnswerLessonQuestionOutput } from '@/lib/types';
-import { AnswerLessonQuestionInputSchema, AnswerLessonQuestionOutputSchema } from '@/lib/schemas';
+
+const AnswerLessonQuestionInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  userQuestion: z.string().describe("The user's question about the lesson."),
+});
+
+const AnswerLessonQuestionOutputSchema = z.object({
+  answer: z
+    .string()
+    .describe("The generated answer to the user's question in HTML format."),
+});
 
 
 export async function answerLessonQuestion(

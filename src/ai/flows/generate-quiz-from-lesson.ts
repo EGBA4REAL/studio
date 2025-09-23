@@ -6,11 +6,26 @@
  *
  * - generateQuizFromLesson - A function that generates a quiz from lesson content.
  */
-
+import { z } from 'zod';
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateQuizFromLessonInput, GenerateQuizFromLessonOutput } from '@/lib/types';
-import { GenerateQuizFromLessonInputSchema, GenerateQuizFromLessonOutputSchema } from '@/lib/schemas';
+import { QuizQuestionSchema } from '@/lib/schemas';
+
+const GenerateQuizFromLessonInputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe(
+      'The text or HTML content of the lesson from which to generate the quiz.'
+    ),
+});
+
+const GenerateQuizFromLessonOutputSchema = z.object({
+  quiz: z.object({
+    questions: z.array(QuizQuestionSchema),
+  }),
+});
+
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput

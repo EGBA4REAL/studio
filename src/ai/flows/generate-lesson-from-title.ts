@@ -6,11 +6,22 @@
  *
  * - generateLessonFromTitle - A function that generates lesson content.
  */
-
+import { z } from 'zod';
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateLessonFromTitleInput, GenerateLessonFromTitleOutput } from '@/lib/types';
-import { GenerateLessonFromTitleInputSchema, GenerateLessonFromTitleOutputSchema } from '@/lib/schemas';
+
+const GenerateLessonFromTitleInputSchema = z.object({
+  topicTitle: z
+    .string()
+    .describe('The title of the topic for which to generate lesson content.'),
+});
+
+const GenerateLessonFromTitleOutputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe('The generated lesson content in HTML format.'),
+});
 
 export async function generateLessonFromTitle(
   input: GenerateLessonFromTitleInput
