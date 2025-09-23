@@ -39,9 +39,14 @@ export default async function LandingPage() {
     <div className="flex flex-col min-h-screen">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <Logo />
-        <form action={signIn}>
-          <Button>Sign In & Start Learning</Button>
-        </form>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" asChild>
+            <Link href="/pricing">Pricing</Link>
+          </Button>
+          <form action={signIn}>
+            <Button>Sign In & Start Learning</Button>
+          </form>
+        </div>
       </header>
 
       <main className="flex-grow">
