@@ -1,14 +1,16 @@
 import { getTopicById, getSubjectById, getClassById, getLevelById } from '@/lib/curriculum-api';
-import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { notFound, redirect } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
-import type { BreadcrumbItem } from '@/lib/types';
+import type { BreadcrumbItem, User } from '@/lib/types';
 import { QuizGenForm } from '@/components/quiz/quiz-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, FileText, Sparkles } from 'lucide-react';
+import { AlertCircle, FileText, Sparkles, Lock } from 'lucide-react';
 import { LessonQA } from '@/components/qa/lesson-qa';
 import { Button } from '@/components/ui/button';
 import { generateLessonAction } from '@/app/actions';
+import { getSession } from '@/lib/auth';
+import Link from 'next/link';
 
 function GenerateLessonForm({ topicId, topicTitle }: { topicId: string; topicTitle: string }) {
   return (
@@ -23,6 +25,36 @@ function GenerateLessonForm({ topicId, topicTitle }: { topicId: string; topicTit
   );
 }
 
+function UpgradePromptCard() {
+    return (
+        <Card className="my-8 bg-amber-50 border-amber-200 text-center">
+            <CardHeader>
+                <div className="mx-auto bg-amber-100 p-3 rounded-full">
+                    <Lock className="w-6 h-6 text-amber-600" />
+                </div>
+                <CardTitle className="mt-4 font-headline">Unlock the Full Lesson</CardTitle>
+                <CardDescription>
+                    You've reached the end of the free preview. Upgrade your plan to continue learning this topic and get full access to all materials.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button asChild>
+                    <Link href="/pricing">View Subscription Plans</Link>
+                </Button>
+            </CardContent>
+        </Card>
+    )
+}
+
+function getTruncatedContent(html: string): string {
+    // A simple truncation logic. It finds the 3rd paragraph and cuts off there.
+    const paragraphs = html.split('</p>');
+    if (paragraphs.length <= 3) {
+        return html;
+    }
+    return paragraphs.slice(0, 3).join('</p>') + '</p>';
+}
+
 export default async function LessonPage({
   params,
   searchParams,
@@ -30,6 +62,11 @@ export default async function LessonPage({
   params: { topicId: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
+  const user = await getSession();
+  if (!user) {
+      redirect('/');
+  }
+
   const topic = await getTopicById(params.topicId);
   if (!topic) {
     notFound();
@@ -51,6 +88,9 @@ export default async function LessonPage({
   const showError = searchParams?.error === 'generation_failed';
   const showPlaceholder = topic.lessonContent.includes('Lesson content coming soon');
 
+  const isFreeUser = user.subscription?.status === 'free';
+  const displayContent = isFreeUser ? getTruncatedContent(topic.lessonContent) : topic.lessonContent;
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <BreadcrumbNav items={breadcrumbs} />
@@ -70,7 +110,7 @@ export default async function LessonPage({
             </CardHeader>
             <CardContent className="text-center py-12">
                 <p className="text-muted-foreground mb-6">
-                    This lesson hasn&apos;t been generated yet. Click the button below to create it using AI.
+                    This lesson hasn't been generated yet. Click the button below to create it using AI.
                 </p>
                 <GenerateLessonForm topicId={topic.id} topicTitle={topic.title} />
             </CardContent>
@@ -78,29 +118,34 @@ export default async function LessonPage({
       ) : (
         <>
             <Card>
-                <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: topic.lessonContent }} />
+                <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: displayContent }} />
+                {isFreeUser && <UpgradePromptCard />}
             </Card>
             
-            <div className="py-6">
-                <LessonQA lessonContent={topic.lessonContent} />
-            </div>
+            { !isFreeUser && (
+                <>
+                    <div className="py-6">
+                        <LessonQA lessonContent={topic.lessonContent} />
+                    </div>
 
-            <div className="text-center py-6 space-y-4">
-                <h2 className="text-2xl font-headline font-semibold">Ready to test your knowledge?</h2>
-                <p className="text-muted-foreground">
-                Click the button below to generate a unique quiz based on this lesson.
-                </p>
-                {showError && (
-                    <Alert variant="destructive" className="text-left">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Quiz Generation Failed</AlertTitle>
-                        <AlertDescription>
-                            There was an error generating the quiz. Please try again later.
-                        </AlertDescription>
-                    </Alert>
-                )}
-                <QuizGenForm topicId={topic.id} />
-            </div>
+                    <div className="text-center py-6 space-y-4">
+                        <h2 className="text-2xl font-headline font-semibold">Ready to test your knowledge?</h2>
+                        <p className="text-muted-foreground">
+                        Click the button below to generate a unique quiz based on this lesson.
+                        </p>
+                        {showError && (
+                            <Alert variant="destructive" className="text-left">
+                                <AlertCircle className="h-4 w-4" />
+                                <AlertTitle>Quiz Generation Failed</AlertTitle>
+                                <AlertDescription>
+                                    There was an error generating the quiz. Please try again later.
+                                </AlertDescription>
+                            </Alert>
+                        )}
+                        <QuizGenForm topicId={topic.id} />
+                    </div>
+                </>
+            )}
         </>
       )}
     </div>
