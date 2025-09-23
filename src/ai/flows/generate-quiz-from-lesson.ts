@@ -12,16 +12,19 @@ import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateQuizFromLessonInput, GenerateQuizFromLessonOutput } from '@/lib/types';
 import { GenerateQuizFromLessonInputSchema, GenerateQuizFromLessonOutputSchema } from '@/lib/types';
 
-const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
-});
+export async function generateQuizFromLesson(
+  input: GenerateQuizFromLessonInput
+): Promise<GenerateQuizFromLessonOutput> {
+  const ai = genkit({
+    plugins: [googleAI()],
+    model: 'googleai/gemini-2.5-flash',
+  });
 
-const prompt = ai.definePrompt({
-  name: 'generateQuizFromLessonPrompt',
-  input: {schema: GenerateQuizFromLessonInputSchema},
-  output: {schema: GenerateQuizFromLessonOutputSchema, format: 'json'},
-  prompt: `You are a teacher who is creating a quiz based on the content of a lesson.
+  const prompt = ai.definePrompt({
+    name: 'generateQuizFromLessonPrompt',
+    input: {schema: GenerateQuizFromLessonInputSchema},
+    output: {schema: GenerateQuizFromLessonOutputSchema, format: 'json'},
+    prompt: `You are a teacher who is creating a quiz based on the content of a lesson.
 
   The lesson content is provided below:
   {{{lessonContent}}}
@@ -30,22 +33,19 @@ const prompt = ai.definePrompt({
   Each question should have 4 options, one of which is the correct answer. Mark the correct answer.
   Return the quiz in the format specified in the output schema.
   `,
-});
+  });
 
-const generateQuizFromLessonFlow = ai.defineFlow(
-  {
-    name: 'generateQuizFromLessonFlow',
-    inputSchema: GenerateQuizFromLessonInputSchema,
-    outputSchema: GenerateQuizFromLessonOutputSchema,
-  },
-  async (flowInput: z.infer<typeof GenerateQuizFromLessonInputSchema>) => {
-    const {output} = await prompt(flowInput);
-    return output!;
-  }
-);
-
-export async function generateQuizFromLesson(
-  input: GenerateQuizFromLessonInput
-): Promise<GenerateQuizFromLessonOutput> {
+  const generateQuizFromLessonFlow = ai.defineFlow(
+    {
+      name: 'generateQuizFromLessonFlow',
+      inputSchema: GenerateQuizFromLessonInputSchema,
+      outputSchema: GenerateQuizFromLessonOutputSchema,
+    },
+    async (flowInput) => {
+      const {output} = await prompt(flowInput);
+      return output!;
+    }
+  );
+  
   return await generateQuizFromLessonFlow(input);
 }

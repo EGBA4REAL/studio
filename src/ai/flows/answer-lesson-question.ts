@@ -12,16 +12,20 @@ import {googleAI} from '@genkit-ai/googleai';
 import type { AnswerLessonQuestionInput, AnswerLessonQuestionOutput } from '@/lib/types';
 import { AnswerLessonQuestionInputSchema, AnswerLessonQuestionOutputSchema } from '@/lib/types';
 
-const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
-});
 
-const prompt = ai.definePrompt({
-  name: 'answerLessonQuestionPrompt',
-  input: {schema: AnswerLessonQuestionInputSchema},
-  output: {schema: AnswerLessonQuestionOutputSchema},
-  prompt: `You are an expert tutor for Nigerian students. Your task is to answer a student's question based on the provided lesson content.
+export async function answerLessonQuestion(
+  input: AnswerLessonQuestionInput
+): Promise<AnswerLessonQuestionOutput> {
+  const ai = genkit({
+    plugins: [googleAI()],
+    model: 'googleai/gemini-2.5-flash',
+  });
+
+  const prompt = ai.definePrompt({
+    name: 'answerLessonQuestionPrompt',
+    input: {schema: AnswerLessonQuestionInputSchema},
+    output: {schema: AnswerLessonQuestionOutputSchema},
+    prompt: `You are an expert tutor for Nigerian students. Your task is to answer a student's question based on the provided lesson content.
 
   - Your answer must be based *only* on the information within the provided lesson content.
   - If the question cannot be answered from the lesson content, politely state that you cannot answer and that the question is outside the scope of the current lesson.
@@ -35,22 +39,19 @@ const prompt = ai.definePrompt({
 
   Generate the answer now.
   `,
-});
+  });
 
-const answerLessonQuestionFlow = ai.defineFlow(
-  {
-    name: 'answerLessonQuestionFlow',
-    inputSchema: AnswerLessonQuestionInputSchema,
-    outputSchema: AnswerLessonQuestionOutputSchema,
-  },
-  async (flowInput: z.infer<typeof AnswerLessonQuestionInputSchema>) => {
-    const {output} = await prompt(flowInput);
-    return output!;
-  }
-);
+  const answerLessonQuestionFlow = ai.defineFlow(
+    {
+      name: 'answerLessonQuestionFlow',
+      inputSchema: AnswerLessonQuestionInputSchema,
+      outputSchema: AnswerLessonQuestionOutputSchema,
+    },
+    async (flowInput) => {
+      const {output} = await prompt(flowInput);
+      return output!;
+    }
+  );
 
-export async function answerLessonQuestion(
-  input: AnswerLessonQuestionInput
-): Promise<AnswerLessonQuestionOutput> {
   return await answerLessonQuestionFlow(input);
 }

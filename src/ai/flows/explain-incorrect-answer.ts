@@ -12,16 +12,19 @@ import {googleAI} from '@genkit-ai/googleai';
 import type { ExplainIncorrectAnswerInput, ExplainIncorrectAnswerOutput } from '@/lib/types';
 import { ExplainIncorrectAnswerInputSchema, ExplainIncorrectAnswerOutputSchema } from '@/lib/types';
 
-const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
-});
+export async function explainIncorrectAnswer(
+  input: ExplainIncorrectAnswerInput
+): Promise<ExplainIncorrectAnswerOutput> {
+  const ai = genkit({
+    plugins: [googleAI()],
+    model: 'googleai/gemini-2.5-flash',
+  });
 
-const prompt = ai.definePrompt({
-  name: 'explainIncorrectAnswerPrompt',
-  input: {schema: ExplainIncorrectAnswerInputSchema},
-  output: {schema: ExplainIncorrectAnswerOutputSchema},
-  prompt: `You are a helpful tutor. A student answered a quiz question incorrectly.
+  const prompt = ai.definePrompt({
+    name: 'explainIncorrectAnswerPrompt',
+    input: {schema: ExplainIncorrectAnswerInputSchema},
+    output: {schema: ExplainIncorrectAnswerOutputSchema},
+    prompt: `You are a helpful tutor. A student answered a quiz question incorrectly.
   Your task is to explain why their answer is wrong and what the correct answer is,
   using the provided lesson content as the basis for your explanation.
 
@@ -43,22 +46,19 @@ const prompt = ai.definePrompt({
 
   Generate the explanation now.
   `,
-});
+  });
 
-const explainIncorrectAnswerFlow = ai.defineFlow(
-  {
-    name: 'explainIncorrectAnswerFlow',
-    inputSchema: ExplainIncorrectAnswerInputSchema,
-    outputSchema: ExplainIncorrectAnswerOutputSchema,
-  },
-  async (flowInput: z.infer<typeof ExplainIncorrectAnswerInputSchema>) => {
-    const {output} = await prompt(flowInput);
-    return output!;
-  }
-);
-
-export async function explainIncorrectAnswer(
-  input: ExplainIncorrectAnswerInput
-): Promise<ExplainIncorrectAnswerOutput> {
+  const explainIncorrectAnswerFlow = ai.defineFlow(
+    {
+      name: 'explainIncorrectAnswerFlow',
+      inputSchema: ExplainIncorrectAnswerInputSchema,
+      outputSchema: ExplainIncorrectAnswerOutputSchema,
+    },
+    async (flowInput) => {
+      const {output} = await prompt(flowInput);
+      return output!;
+    }
+  );
+  
   return await explainIncorrectAnswerFlow(input);
 }
