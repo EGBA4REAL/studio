@@ -44,7 +44,7 @@ export default async function TopicPage({ params }: { params: { topicId: string 
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground mb-4">
-              Dive into this week&apos;s detailed lesson.
+              Dive into this week's detailed lesson.
             </p>
             <Button asChild className="w-full group">
               <Link href={`/dashboard/topic/${topic.id}/lesson`}>

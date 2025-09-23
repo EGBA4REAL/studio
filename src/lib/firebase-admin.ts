@@ -1,31 +1,20 @@
 'use server';
+
+import 'server-only';
 import admin from 'firebase-admin';
-import { getApps, initializeApp, cert, App } from 'firebase-admin/app';
+import { getApps, initializeApp, cert } from 'firebase-admin/app';
 
 const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
   ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)
   : undefined;
 
-// Use a function to avoid initializing multiple times
-const initializeAdminApp = (): App => {
-  const adminAppName = 'firebase-admin-app-server'; // Use a unique name
-  const existingApp = getApps().find(app => app.name === adminAppName);
-  if (existingApp) {
-    return existingApp;
-  }
-
-  if (serviceAccount) {
-    return initializeApp({
+// This is a robust way to initialize the Firebase Admin SDK in a Next.js server environment.
+// It checks if the app is already initialized to prevent errors during hot-reloads.
+const adminApp = !getApps().length
+  ? initializeApp({
       credential: cert(serviceAccount),
-    }, adminAppName);
-  }
-  
-  // This is for local development and should not be used in production
-  // It will try to use Application Default Credentials
-  console.warn("Firebase Admin SDK not initialized with a service account. Using default app initialization for local development. Make sure FIREBASE_SERVICE_ACCOUNT_KEY is set in production.")
-  return initializeApp(undefined, adminAppName);
-};
+    })
+  : admin.app();
 
-export const adminApp = initializeAdminApp();
-export const adminAuth = admin.auth(adminApp);
-export const adminDb = admin.firestore(adminApp);
+export const adminAuth = adminApp.auth();
+export const adminDb = adminApp.firestore();

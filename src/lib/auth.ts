@@ -1,4 +1,5 @@
 'use server';
+
 import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
