@@ -8,13 +8,31 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
 import {
   GenerateQuizFromLessonInput,
-  GenerateQuizFromLessonInputSchema,
   GenerateQuizFromLessonOutput,
-  GenerateQuizFromLessonOutputSchema,
 } from '@/lib/types';
 
+const GenerateQuizFromLessonInputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe('The text or HTML content of the lesson from which to generate the quiz.'),
+});
+
+const QuizQuestionSchema = z.object({
+  question: z.string(),
+  options: z.array(z.object({
+    text: z.string(),
+    isCorrect: z.boolean(),
+  })),
+});
+
+const GenerateQuizFromLessonOutputSchema = z.object({
+  quiz: z.object({
+    questions: z.array(QuizQuestionSchema),
+  })
+});
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput

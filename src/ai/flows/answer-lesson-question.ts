@@ -8,12 +8,22 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
 import {
   AnswerLessonQuestionInput,
-  AnswerLessonQuestionInputSchema,
   AnswerLessonQuestionOutput,
-  AnswerLessonQuestionOutputSchema,
 } from '@/lib/types';
+
+const AnswerLessonQuestionInputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe('The HTML content of the lesson.'),
+  userQuestion: z.string().describe("The user's question about the lesson."),
+});
+
+const AnswerLessonQuestionOutputSchema = z.object({
+  answer: z.string().describe('The generated answer to the user\'s question in HTML format.'),
+});
 
 export async function answerLessonQuestion(
   input: AnswerLessonQuestionInput

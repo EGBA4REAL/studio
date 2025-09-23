@@ -8,13 +8,24 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
 import {
   ExplainIncorrectAnswerInput,
-  ExplainIncorrectAnswerInputSchema,
   ExplainIncorrectAnswerOutput,
-  ExplainIncorrectAnswerOutputSchema,
 } from '@/lib/types';
 
+const ExplainIncorrectAnswerInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  question: z.string().describe('The quiz question that was answered incorrectly.'),
+  selectedAnswer: z.string().describe('The incorrect answer the user selected.'),
+  correctAnswer: z.string().describe('The correct answer for the question.'),
+});
+
+const ExplainIncorrectAnswerOutputSchema = z.object({
+  explanation: z
+    .string()
+    .describe('A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'),
+});
 
 export async function explainIncorrectAnswer(
   input: ExplainIncorrectAnswerInput

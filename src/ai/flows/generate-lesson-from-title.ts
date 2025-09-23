@@ -8,12 +8,21 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
 import {
   GenerateLessonFromTitleInput,
-  GenerateLessonFromTitleInputSchema,
   GenerateLessonFromTitleOutput,
-  GenerateLessonFromTitleOutputSchema,
 } from '@/lib/types';
+
+const GenerateLessonFromTitleInputSchema = z.object({
+  topicTitle: z
+    .string()
+    .describe('The title of the topic for which to generate lesson content.'),
+});
+
+const GenerateLessonFromTitleOutputSchema = z.object({
+  lessonContent: z.string().describe('The generated lesson content in HTML format.'),
+});
 
 export async function generateLessonFromTitle(
   input: GenerateLessonFromTitleInput
