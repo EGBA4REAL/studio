@@ -10,6 +10,7 @@ import { CheckCircle, Circle, ListTodo } from 'lucide-react';
 import Link from 'next/link';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import type { BreadcrumbItem } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 export default async function SubjectPage({
   params,
@@ -54,9 +55,12 @@ export default async function SubjectPage({
                 key={topic.id}
                 className="block"
               >
-                <div className="flex items-center gap-4 rounded-lg border p-4 transition-all hover:bg-accent hover:shadow-md">
+                <div className={cn(
+                    "flex items-center gap-4 rounded-lg border p-4 transition-all hover:bg-accent hover:shadow-md",
+                    topic.completed && "bg-green-50 border-green-200"
+                )}>
                   {topic.completed ? (
-                    <CheckCircle className="h-6 w-6 text-primary flex-shrink-0" />
+                    <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0" />
                   ) : (
                     <Circle className="h-6 w-6 text-muted-foreground flex-shrink-0" />
                   )}

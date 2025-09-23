@@ -4,6 +4,7 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
@@ -50,6 +51,7 @@ export async function createSession(idToken: string) {
         email: decodedToken.email || '',
         avatarUrl: decodedToken.picture || undefined,
         subscription: { status: 'free' },
+        progress: { completedTopics: [] },
       };
       await userRef.set(newUser);
     }
@@ -66,4 +68,17 @@ export async function createSession(idToken: string) {
 
 export async function deleteSession() {
   cookies().delete(SESSION_COOKIE_NAME);
+}
+
+
+export async function updateUserProgress(topicId: string) {
+  const user = await getSession();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const userRef = adminDb.collection('users').doc(user.id);
+  await userRef.update({
+    'progress.completedTopics': FieldValue.arrayUnion(topicId),
+  });
 }

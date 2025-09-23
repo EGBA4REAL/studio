@@ -9,6 +9,9 @@ export interface User {
     status: 'free' | 'daily' | 'weekly' | 'monthly' | 'yearly';
     // Add more subscription details here later, like expiry date
   };
+  progress?: {
+    completedTopics: string[];
+  };
 }
 
 export interface Level {

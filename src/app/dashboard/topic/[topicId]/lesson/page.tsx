@@ -1,16 +1,17 @@
 import { getTopicById, getSubjectById, getClassById, getLevelById } from '@/lib/curriculum-api';
 import { notFound, redirect } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import type { BreadcrumbItem, User } from '@/lib/types';
 import { QuizGenForm } from '@/components/quiz/quiz-form';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, FileText, Sparkles, Lock } from 'lucide-react';
+import { AlertCircle, FileText, Sparkles, Lock, CheckCircle, ArrowRight } from 'lucide-react';
 import { LessonQA } from '@/components/qa/lesson-qa';
 import { Button } from '@/components/ui/button';
-import { generateLessonAction } from '@/app/actions';
+import { generateLessonAction, markTopicAsCompleteAction } from '@/app/actions';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
+import { ProgressCompleteForm } from '@/components/progress/progress-complete-form';
 
 function GenerateLessonForm({ topicId, topicTitle }: { topicId: string; topicTitle: string }) {
   return (
@@ -91,6 +92,8 @@ export default async function LessonPage({
   const isFreeUser = user.subscription?.status === 'free';
   const displayContent = isFreeUser ? getTruncatedContent(topic.lessonContent) : topic.lessonContent;
 
+  const isCompleted = user.progress?.completedTopics?.includes(topic.id) ?? false;
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <BreadcrumbNav items={breadcrumbs} />
@@ -120,6 +123,12 @@ export default async function LessonPage({
             <Card>
                 <CardContent className="prose dark:prose-invert max-w-none p-6 md:p-8" dangerouslySetInnerHTML={{ __html: displayContent }} />
                 {isFreeUser && !showPlaceholder && <UpgradePromptCard />}
+                {!isFreeUser && !showPlaceholder && (
+                    <CardFooter className="flex-col items-start gap-4 border-t px-6 py-4">
+                        <h3 className="font-bold text-lg">Did you finish the lesson?</h3>
+                        <ProgressCompleteForm topicId={topic.id} subjectId={topic.subjectId} isCompleted={isCompleted} />
+                    </CardFooter>
+                )}
             </Card>
             
             { !isFreeUser && (

@@ -1,6 +1,6 @@
 'use server';
 
-import { createSession, deleteSession } from '@/lib/auth';
+import { createSession, deleteSession, updateUserProgress } from '@/lib/auth';
 import { getTopicById, updateTopicContent } from '@/lib/curriculum-api';
 import { redirect } from 'next/navigation';
 import { generateQuizFromLesson } from '@/ai/flows/generate-quiz-from-lesson';
@@ -20,6 +20,23 @@ export async function signOut() {
   await deleteSession();
   redirect('/');
 }
+
+export async function markTopicAsCompleteAction(formData: FormData) {
+  const topicId = formData.get('topicId') as string;
+  const subjectId = formData.get('subjectId') as string;
+
+  if (!topicId) {
+    throw new Error('Topic ID is required to mark as complete');
+  }
+
+  await updateUserProgress(topicId);
+
+  // Revalidate paths to update UI
+  revalidatePath('/dashboard');
+  revalidatePath(`/dashboard/subject/${subjectId}`);
+  revalidatePath(`/dashboard/topic/${topicId}/lesson`);
+}
+
 
 export async function generateLessonAction(formData: FormData) {
   const topicId = formData.get('topicId') as string;

@@ -4,6 +4,7 @@
 import 'server-only';
 import { levels, classes, subjects, topics } from './mock-data';
 import type { Class, Subject, Topic, Level } from './types';
+import { getSession } from './auth';
 
 export async function getLevels(): Promise<Level[]> {
   return Promise.resolve(levels);
@@ -31,11 +32,32 @@ export async function getSubjectById(subjectId: string): Promise<Subject | undef
 }
 
 export async function getTopicsBySubject(subjectId: string): Promise<Topic[]> {
-  return Promise.resolve(topics.filter((t) => t.subjectId === subjectId).sort((a,b) => a.week - b.week));
+  const user = await getSession();
+  const completedTopics = user?.progress?.completedTopics || [];
+  
+  const subjectTopics = topics
+    .filter((t) => t.subjectId === subjectId)
+    .sort((a, b) => a.week - b.week)
+    .map(topic => ({
+      ...topic,
+      completed: completedTopics.includes(topic.id)
+    }));
+
+  return Promise.resolve(subjectTopics);
 }
 
 export async function getTopicById(topicId: string): Promise<Topic | undefined> {
-    return Promise.resolve(topics.find(t => t.id === topicId));
+    const user = await getSession();
+    const completedTopics = user?.progress?.completedTopics || [];
+    const topic = topics.find(t => t.id === topicId);
+
+    if (topic) {
+        return {
+            ...topic,
+            completed: completedTopics.includes(topic.id)
+        }
+    }
+    return Promise.resolve(undefined);
 }
 
 export async function updateTopicContent(topicId: string, newContent: string): Promise<void> {
@@ -44,4 +66,8 @@ export async function updateTopicContent(topicId: string, newContent: string): P
     topics[topicIndex].lessonContent = newContent;
   }
   return Promise.resolve();
+}
+
+export async function getTotalTopicCount(): Promise<number> {
+    return Promise.resolve(topics.length);
 }
