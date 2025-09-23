@@ -1,7 +1,17 @@
+'use server';
+
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-export const ai = genkit({
-  plugins: [googleAI()],
-  model: 'googleai/gemini-2.5-flash',
-});
+let aiInstance: any;
+
+// This function ensures that the genkit instance is a singleton.
+export async function getAi() {
+  if (!aiInstance) {
+    aiInstance = genkit({
+      plugins: [googleAI()],
+      model: 'googleai/gemini-2.5-flash',
+    });
+  }
+  return aiInstance;
+}

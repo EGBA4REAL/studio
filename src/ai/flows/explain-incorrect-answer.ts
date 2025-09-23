@@ -7,25 +7,12 @@
  * - explainIncorrectAnswer - A function that generates an explanation.
  */
 
-import {ai} from '@/ai/genkit';
+import {getAi} from '@/ai/genkit';
 import {z} from 'genkit';
 import {
   ExplainIncorrectAnswerInput,
   ExplainIncorrectAnswerOutput,
 } from '@/lib/types';
-
-const ExplainIncorrectAnswerInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  question: z.string().describe('The quiz question that was answered incorrectly.'),
-  selectedAnswer: z.string().describe('The incorrect answer the user selected.'),
-  correctAnswer: z.string().describe('The correct answer for the question.'),
-});
-
-const ExplainIncorrectAnswerOutputSchema = z.object({
-  explanation: z
-    .string()
-    .describe('A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'),
-});
 
 
 export async function explainIncorrectAnswer(
@@ -34,11 +21,27 @@ export async function explainIncorrectAnswer(
   return explainIncorrectAnswerFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'explainIncorrectAnswerPrompt',
-  input: {schema: ExplainIncorrectAnswerInputSchema},
-  output: {schema: ExplainIncorrectAnswerOutputSchema},
-  prompt: `You are a helpful tutor. A student answered a quiz question incorrectly.
+const explainIncorrectAnswerFlow = async (input: ExplainIncorrectAnswerInput) => {
+    const ai = await getAi();
+
+    const ExplainIncorrectAnswerInputSchema = z.object({
+        lessonContent: z.string().describe('The HTML content of the lesson.'),
+        question: z.string().describe('The quiz question that was answered incorrectly.'),
+        selectedAnswer: z.string().describe('The incorrect answer the user selected.'),
+        correctAnswer: z.string().describe('The correct answer for the question.'),
+    });
+
+    const ExplainIncorrectAnswerOutputSchema = z.object({
+        explanation: z
+            .string()
+            .describe('A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'),
+    });
+
+    const prompt = ai.definePrompt({
+        name: 'explainIncorrectAnswerPrompt',
+        input: {schema: ExplainIncorrectAnswerInputSchema},
+        output: {schema: ExplainIncorrectAnswerOutputSchema},
+        prompt: `You are a helpful tutor. A student answered a quiz question incorrectly.
   Your task is to explain why their answer is wrong and what the correct answer is,
   using the provided lesson content as the basis for your explanation.
 
@@ -60,16 +63,19 @@ const prompt = ai.definePrompt({
 
   Generate the explanation now.
   `,
-});
+    });
 
-const explainIncorrectAnswerFlow = ai.defineFlow(
-  {
-    name: 'explainIncorrectAnswerFlow',
-    inputSchema: ExplainIncorrectAnswerInputSchema,
-    outputSchema: ExplainIncorrectAnswerOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);
+    const flow = ai.defineFlow(
+    {
+        name: 'explainIncorrectAnswerFlow',
+        inputSchema: ExplainIncorrectAnswerInputSchema,
+        outputSchema: ExplainIncorrectAnswerOutputSchema,
+    },
+    async (input: ExplainIncorrectAnswerInput) => {
+        const {output} = await prompt(input);
+        return output!;
+    }
+    );
+
+    return flow(input);
+}
