@@ -14,6 +14,7 @@ import {
   GenerateQuizFromLessonOutput,
 } from '@/lib/types';
 
+
 const GenerateQuizFromLessonInputSchema = z.object({
   lessonContent: z
     .string()
@@ -33,6 +34,7 @@ const GenerateQuizFromLessonOutputSchema = z.object({
     questions: z.array(QuizQuestionSchema),
   })
 });
+
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput
