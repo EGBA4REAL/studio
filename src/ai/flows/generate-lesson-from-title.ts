@@ -4,28 +4,15 @@
  * @fileOverview Generates lesson content from a topic title.
  *
  * - generateLessonFromTitle - A function that generates lesson content.
- * - GenerateLessonFromTitleInput - The input type for the generateLessonFromTitle function.
- * - GenerateLessonFromTitleOutput - The return type for the generateLessonFromTitle function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const GenerateLessonFromTitleInputSchema = z.object({
-  topicTitle: z
-    .string()
-    .describe('The title of the topic for which to generate lesson content.'),
-});
-export type GenerateLessonFromTitleInput = z.infer<
-  typeof GenerateLessonFromTitleInputSchema
->;
-
-const GenerateLessonFromTitleOutputSchema = z.object({
-  lessonContent: z.string().describe('The generated lesson content in HTML format.'),
-});
-export type GenerateLessonFromTitleOutput = z.infer<
-  typeof GenerateLessonFromTitleOutputSchema
->;
+import {
+  GenerateLessonFromTitleInput,
+  GenerateLessonFromTitleInputSchema,
+  GenerateLessonFromTitleOutput,
+  GenerateLessonFromTitleOutputSchema,
+} from '@/lib/types';
 
 export async function generateLessonFromTitle(
   input: GenerateLessonFromTitleInput

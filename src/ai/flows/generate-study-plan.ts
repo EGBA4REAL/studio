@@ -4,36 +4,15 @@
  * @fileOverview Generates a personalized study plan based on quiz results.
  *
  * - generateStudyPlan - A function that generates a study plan.
- * - GenerateStudyPlanInput - The input type for the function.
- * - GenerateStudyPlanOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const GenerateStudyPlanInputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe('The HTML content of the lesson.'),
-  questions: z.array(z.object({
-    question: z.string(),
-    selectedAnswer: z.string(),
-    correctAnswer: z.string(),
-    isCorrect: z.boolean(),
-  })).describe('The list of questions, user answers, and results.'),
-   score: z.number().describe('The user\'s final score.'),
-   totalQuestions: z.number().describe('The total number of questions in the quiz.'),
-});
-export type GenerateStudyPlanInput = z.infer<
-  typeof GenerateStudyPlanInputSchema
->;
-
-const GenerateStudyPlanOutputSchema = z.object({
-  studyPlan: z.string().describe('The personalized study plan in HTML format.'),
-});
-export type GenerateStudyPlanOutput = z.infer<
-  typeof GenerateStudyPlanOutputSchema
->;
+import {
+  GenerateStudyPlanInput,
+  GenerateStudyPlanInputSchema,
+  GenerateStudyPlanOutput,
+  GenerateStudyPlanOutputSchema,
+} from '@/lib/types';
 
 export async function generateStudyPlan(
   input: GenerateStudyPlanInput

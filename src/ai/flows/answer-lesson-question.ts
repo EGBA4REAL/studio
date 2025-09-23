@@ -4,29 +4,15 @@
  * @fileOverview Answers a user's question based on the lesson content.
  *
  * - answerLessonQuestion - A function that answers a user's question.
- * - AnswerLessonQuestionInput - The input type for the answerLessonQuestion function.
- * - AnswerLessonQuestionOutput - The return type for the answerLessonQuestion function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-const AnswerLessonQuestionInputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe('The HTML content of the lesson.'),
-  userQuestion: z.string().describe("The user's question about the lesson."),
-});
-export type AnswerLessonQuestionInput = z.infer<
-  typeof AnswerLessonQuestionInputSchema
->;
-
-const AnswerLessonQuestionOutputSchema = z.object({
-  answer: z.string().describe('The generated answer to the user\'s question in HTML format.'),
-});
-export type AnswerLessonQuestionOutput = z.infer<
-  typeof AnswerLessonQuestionOutputSchema
->;
+import {
+  AnswerLessonQuestionInput,
+  AnswerLessonQuestionInputSchema,
+  AnswerLessonQuestionOutput,
+  AnswerLessonQuestionOutputSchema,
+} from '@/lib/types';
 
 export async function answerLessonQuestion(
   input: AnswerLessonQuestionInput

@@ -4,28 +4,16 @@
  * @fileOverview Generates a quiz from a lesson's text or HTML content.
  *
  * - generateQuizFromLesson - A function that generates a quiz from lesson content.
- * - GenerateQuizFromLessonInput - The input type for the generateQuizFromLesson function.
- * - GenerateQuizFromLessonOutput - The return type for the generateQuizFromLesson function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {
+  GenerateQuizFromLessonInput,
+  GenerateQuizFromLessonInputSchema,
+  GenerateQuizFromLessonOutput,
+  GenerateQuizFromLessonOutputSchema,
+} from '@/lib/types';
 
-const GenerateQuizFromLessonInputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe('The text or HTML content of the lesson from which to generate the quiz.'),
-});
-export type GenerateQuizFromLessonInput = z.infer<
-  typeof GenerateQuizFromLessonInputSchema
->;
-
-const GenerateQuizFromLessonOutputSchema = z.object({
-  quiz: z.string().describe('The generated quiz in JSON format.'),
-});
-export type GenerateQuizFromLessonOutput = z.infer<
-  typeof GenerateQuizFromLessonOutputSchema
->;
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput

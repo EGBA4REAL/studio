@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { CheckCircle, XCircle, Award, RotateCw, Lightbulb, Loader2, BookCheck } from 'lucide-react';
+import { CheckCircle, XCircle, Award, RotateCw, Lightbulb, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { getExplanationAction, getStudyPlanAction } from '@/app/actions';
+import { getExplanationAction } from '@/app/actions';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 
 interface QuizClientProps {
@@ -67,9 +67,6 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [results, setResults] = useState<AnswerResult[]>([]);
-  const [studyPlan, setStudyPlan] = useState("");
-  const [studyPlanError, setStudyPlanError] = useState("");
-  const [studyPlanLoading, setStudyPlanLoading] = useState(false);
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const totalQuestions = quiz.questions.length;
@@ -97,23 +94,6 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
     }]);
 
   };
-  
-  const generateStudyPlan = async (finalScore: number, finalResults: AnswerResult[]) => {
-      setStudyPlanLoading(true);
-      const res = await getStudyPlanAction({
-          lessonContent: topic.lessonContent,
-          questions: finalResults,
-          score: finalScore,
-          totalQuestions: totalQuestions,
-      });
-
-      if (res.error) {
-          setStudyPlanError(res.error);
-      } else if (res.studyPlan) {
-          setStudyPlan(res.studyPlan);
-      }
-      setStudyPlanLoading(false);
-  }
 
   const handleNextQuestion = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
@@ -122,14 +102,6 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
       setIsAnswered(false);
     } else {
       setIsFinished(true);
-      const finalScore = score + (currentQuestion.options[selectedOptionIndex!].isCorrect ? (results.some(r => r.question === currentQuestion.question) ? 0 : 1) : 0);
-      const finalResults = [...results, {
-        question: currentQuestion.question,
-        selectedAnswer: currentQuestion.options[selectedOptionIndex!].text,
-        correctAnswer: currentQuestion.options.find(o => o.isCorrect)?.text || "",
-        isCorrect: currentQuestion.options[selectedOptionIndex!].isCorrect
-      }];
-      generateStudyPlan(finalScore, finalResults);
     }
   };
   
@@ -140,20 +112,12 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
     setScore(0);
     setIsFinished(false);
     setResults([]);
-    setStudyPlan("");
-    setStudyPlanError("");
   }
   
   const currentResult = useMemo(() => {
     if(!isAnswered) return null;
     return results[currentQuestionIndex];
   }, [isAnswered, currentQuestionIndex, results]);
-
-  useEffect(() => {
-    if(isFinished) {
-      generateStudyPlan(score, results);
-    }
-  }, [isFinished])
 
   if (isFinished) {
     const percentage = Math.round((score / totalQuestions) * 100);
@@ -179,23 +143,6 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
               </Button>
           </CardFooter>
         </Card>
-
-        { (studyPlan || studyPlanLoading || studyPlanError) &&
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 font-headline">
-                        <BookCheck className="w-6 h-6 text-primary"/>
-                        Personalized Study Plan
-                    </CardTitle>
-                    <CardDescription>Based on your quiz results, here are some topics to focus on.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {studyPlanLoading && <div className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Generating your study plan...</div>}
-                    {studyPlanError && <Alert variant="destructive">{studyPlanError}</Alert>}
-                    {studyPlan && <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: studyPlan }} />}
-                </CardContent>
-            </Card>
-        }
       </div>
     );
   }

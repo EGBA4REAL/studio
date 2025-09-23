@@ -6,8 +6,6 @@ import { redirect } from 'next/navigation';
 import { generateQuizFromLesson } from '@/ai/flows/generate-quiz-from-lesson';
 import { answerLessonQuestion } from '@/ai/flows/answer-lesson-question';
 import { explainIncorrectAnswer } from '@/ai/flows/explain-incorrect-answer';
-import type { GenerateStudyPlanInput } from '@/ai/flows/generate-study-plan';
-import { generateStudyPlan } from '@/ai/flows/generate-study-plan';
 import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
 import { revalidatePath } from 'next/cache';
 
@@ -121,19 +119,5 @@ export async function getExplanationAction(prevState: any, formData: FormData) {
     } catch(e) {
         console.error("Error getting explanation", e);
         return { error: "Could not load explanation." }
-    }
-}
-
-export async function getStudyPlanAction(input: GenerateStudyPlanInput) {
-    if (input.score / input.totalQuestions > 0.7 && input.score !== input.totalQuestions) {
-        return { studyPlan: "<p>Great job! You have a good understanding of the material. Review the topics where you made mistakes to master the concepts.</p>" }
-    }
-
-    try {
-        const { studyPlan } = await generateStudyPlan(input);
-        return { studyPlan };
-    } catch(e) {
-        console.error("Error generating study plan", e);
-        return { error: "Could not generate study plan." }
     }
 }
