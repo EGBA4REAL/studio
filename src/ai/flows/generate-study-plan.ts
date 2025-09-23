@@ -7,11 +7,7 @@
  * - generateStudyPlan - A function that generates a study plan.
  */
 
-import {getAi} from '@/ai/genkit';
-import type {
-  GenerateStudyPlanInput,
-  GenerateStudyPlanOutput,
-} from '@/lib/types';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateStudyPlanInputSchema = z.object({
@@ -31,13 +27,18 @@ const GenerateStudyPlanInputSchema = z.object({
     .number()
     .describe('The total number of questions in the quiz.'),
 });
+export type GenerateStudyPlanInput = z.infer<
+  typeof GenerateStudyPlanInputSchema
+>;
 
 const GenerateStudyPlanOutputSchema = z.object({
   studyPlan: z.string().describe('The personalized study plan in HTML format.'),
 });
+export type GenerateStudyPlanOutput = z.infer<
+  typeof GenerateStudyPlanOutputSchema
+>;
 
-
-const prompt = getAi().definePrompt({
+const prompt = ai.definePrompt({
   name: 'generateStudyPlanPrompt',
   input: {schema: GenerateStudyPlanInputSchema},
   output: {schema: GenerateStudyPlanOutputSchema},
@@ -65,7 +66,7 @@ const prompt = getAi().definePrompt({
   `,
 });
 
-const generateStudyPlanFlow = getAi().defineFlow(
+const generateStudyPlanFlow = ai.defineFlow(
   {
     name: 'generateStudyPlanFlow',
     inputSchema: GenerateStudyPlanInputSchema,

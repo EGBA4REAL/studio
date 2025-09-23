@@ -7,11 +7,7 @@
  * - generateLessonFromTitle - A function that generates lesson content.
  */
 
-import {getAi} from '@/ai/genkit';
-import type {
-  GenerateLessonFromTitleInput,
-  GenerateLessonFromTitleOutput,
-} from '@/lib/types';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateLessonFromTitleInputSchema = z.object({
@@ -19,14 +15,20 @@ const GenerateLessonFromTitleInputSchema = z.object({
     .string()
     .describe('The title of the topic for which to generate lesson content.'),
 });
+export type GenerateLessonFromTitleInput = z.infer<
+  typeof GenerateLessonFromTitleInputSchema
+>;
 
 const GenerateLessonFromTitleOutputSchema = z.object({
   lessonContent: z
     .string()
     .describe('The generated lesson content in HTML format.'),
 });
+export type GenerateLessonFromTitleOutput = z.infer<
+  typeof GenerateLessonFromTitleOutputSchema
+>;
 
-const prompt = getAi().definePrompt({
+const prompt = ai.definePrompt({
   name: 'generateLessonFromTitlePrompt',
   input: {schema: GenerateLessonFromTitleInputSchema},
   output: {schema: GenerateLessonFromTitleOutputSchema},
@@ -41,7 +43,7 @@ const prompt = getAi().definePrompt({
   `,
 });
 
-const generateLessonFromTitleFlow = getAi().defineFlow(
+const generateLessonFromTitleFlow = ai.defineFlow(
   {
     name: 'generateLessonFromTitleFlow',
     inputSchema: GenerateLessonFromTitleInputSchema,

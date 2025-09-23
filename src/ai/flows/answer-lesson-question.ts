@@ -7,26 +7,27 @@
  * - answerLessonQuestion - A function that answers a user's question.
  */
 
-import {getAi} from '@/ai/genkit';
-import type {
-  AnswerLessonQuestionInput,
-  AnswerLessonQuestionOutput,
-} from '@/lib/types';
+import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AnswerLessonQuestionInputSchema = z.object({
   lessonContent: z.string().describe('The HTML content of the lesson.'),
   userQuestion: z.string().describe("The user's question about the lesson."),
 });
+export type AnswerLessonQuestionInput = z.infer<
+  typeof AnswerLessonQuestionInputSchema
+>;
 
 const AnswerLessonQuestionOutputSchema = z.object({
   answer: z
     .string()
     .describe("The generated answer to the user's question in HTML format."),
 });
+export type AnswerLessonQuestionOutput = z.infer<
+  typeof AnswerLessonQuestionOutputSchema
+>;
 
-
-const prompt = getAi().definePrompt({
+const prompt = ai.definePrompt({
   name: 'answerLessonQuestionPrompt',
   input: {schema: AnswerLessonQuestionInputSchema},
   output: {schema: AnswerLessonQuestionOutputSchema},
@@ -46,7 +47,7 @@ const prompt = getAi().definePrompt({
   `,
 });
 
-const answerLessonQuestionFlow = getAi().defineFlow(
+const answerLessonQuestionFlow = ai.defineFlow(
   {
     name: 'answerLessonQuestionFlow',
     inputSchema: AnswerLessonQuestionInputSchema,

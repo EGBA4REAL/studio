@@ -7,11 +7,8 @@
  * - generateQuizFromLesson - A function that generates a quiz from lesson content.
  */
 
-import {getAi} from '@/ai/genkit';
-import type {
-  GenerateQuizFromLessonInput,
-  GenerateQuizFromLessonOutput,
-} from '@/lib/types';
+import {ai} from '@/ai/genkit';
+import type {Quiz} from '@/lib/types';
 import {z} from 'genkit';
 
 const GenerateQuizFromLessonInputSchema = z.object({
@@ -21,6 +18,9 @@ const GenerateQuizFromLessonInputSchema = z.object({
       'The text or HTML content of the lesson from which to generate the quiz.'
     ),
 });
+export type GenerateQuizFromLessonInput = z.infer<
+  typeof GenerateQuizFromLessonInputSchema
+>;
 
 const QuizQuestionSchema = z.object({
   question: z.string(),
@@ -37,9 +37,11 @@ const GenerateQuizFromLessonOutputSchema = z.object({
     questions: z.array(QuizQuestionSchema),
   }),
 });
+export type GenerateQuizFromLessonOutput = z.infer<
+  typeof GenerateQuizFromLessonOutputSchema
+>;
 
-
-const prompt = getAi().definePrompt({
+const prompt = ai.definePrompt({
   name: 'generateQuizFromLessonPrompt',
   input: {schema: GenerateQuizFromLessonInputSchema},
   output: {schema: GenerateQuizFromLessonOutputSchema, format: 'json'},
@@ -54,7 +56,7 @@ const prompt = getAi().definePrompt({
   `,
 });
 
-const generateQuizFromLessonFlow = getAi().defineFlow(
+const generateQuizFromLessonFlow = ai.defineFlow(
   {
     name: 'generateQuizFromLessonFlow',
     inputSchema: GenerateQuizFromLessonInputSchema,

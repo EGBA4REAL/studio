@@ -1,7 +1,4 @@
 
-
-import {z} from 'genkit';
-
 export interface User {
   id: string;
   name: string;
@@ -65,61 +62,32 @@ export interface BreadcrumbItem {
 }
 
 
-// AI Flow Types
+// AI Flow Types from `src/ai/flows/answer-lesson-question.ts`
+export type {
+  AnswerLessonQuestionInput,
+  AnswerLessonQuestionOutput,
+} from '@/ai/flows/answer-lesson-question';
 
-// answer-lesson-question
-export type AnswerLessonQuestionInput = {
-  lessonContent: string;
-  userQuestion: string;
-};
+// AI Flow Types from `src/ai/flows/explain-incorrect-answer.ts`
+export type {
+  ExplainIncorrectAnswerInput,
+  ExplainIncorrectAnswerOutput,
+} from '@/ai/flows/explain-incorrect-answer';
 
-export type AnswerLessonQuestionOutput = {
-  answer: string;
-};
+// AI Flow Types from `src/ai/flows/generate-lesson-from-title.ts`
+export type {
+  GenerateLessonFromTitleInput,
+  GenerateLessonFromTitleOutput,
+} from '@/ai/flows/generate-lesson-from-title';
 
-// explain-incorrect-answer
-export type ExplainIncorrectAnswerInput = {
-  lessonContent: string;
-  question: string;
-  selectedAnswer: string;
-  correctAnswer: string;
-};
+// AI Flow Types from `src/ai/flows/generate-quiz-from-lesson.ts`
+export type {
+  GenerateQuizFromLessonInput,
+  GenerateQuizFromLessonOutput,
+} from '@/ai/flows/generate-quiz-from-lesson';
 
-export type ExplainIncorrectAnswerOutput = {
-  explanation: string;
-};
-
-// generate-lesson-from-title
-export type GenerateLessonFromTitleInput = {
-  topicTitle: string;
-};
-
-export type GenerateLessonFromTitleOutput = {
-  lessonContent: string;
-};
-
-// generate-quiz-from-lesson
-export type GenerateQuizFromLessonInput = {
-  lessonContent: string;
-};
-
-export type GenerateQuizFromLessonOutput = {
-  quiz: Quiz;
-};
-
-// generate-study-plan
-export type GenerateStudyPlanInput = {
-  lessonContent: string;
-  questions: {
-    question: string;
-    selectedAnswer: string;
-    correctAnswer: string;
-    isCorrect: boolean;
-  }[];
-  score: number;
-  totalQuestions: number;
-};
-
-export type GenerateStudyPlanOutput = {
-  studyPlan: string;
-};
+// AI Flow Types from `src/ai/flows/generate-study-plan.ts`
+export type {
+  GenerateStudyPlanInput,
+  GenerateStudyPlanOutput,
+} from '@/ai/flows/generate-study-plan';
