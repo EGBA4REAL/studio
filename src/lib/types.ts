@@ -3,6 +3,10 @@ export interface User {
   name: string;
   email: string;
   avatarUrl?: string;
+  subscription?: {
+    status: 'free' | 'daily' | 'weekly' | 'monthly' | 'yearly';
+    // Add more subscription details here later, like expiry date
+  };
 }
 
 export interface Level {

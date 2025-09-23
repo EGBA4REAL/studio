@@ -8,10 +8,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { User } from '@/lib/types';
 import { Logo } from '../ui/logo';
 import { signOut } from '@/app/actions';
+import { Badge } from '../ui/badge';
 
 type HeaderProps = {
   user: User;
@@ -49,6 +50,11 @@ export function Header({ user }: HeaderProps) {
                 <p className="text-xs leading-none text-muted-foreground">
                   {user.email}
                 </p>
+                 <div className="pt-2">
+                  <Badge variant={user.subscription?.status === 'free' ? 'secondary' : 'default'} className="capitalize">
+                    {user.subscription?.status || 'free'} Plan
+                  </Badge>
+                </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
