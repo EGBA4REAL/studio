@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Check, ArrowRight } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 import Link from 'next/link';
-import { signIn } from '@/app/actions';
+import { AuthButton } from '@/components/auth/auth-button';
 
 const tiers = [
     {
@@ -46,9 +46,7 @@ export default function PricingPage() {
                     <Button variant="ghost" asChild>
                         <Link href="/">Home</Link>
                     </Button>
-                    <form action={signIn}>
-                        <Button>Sign In</Button>
-                    </form>
+                    <AuthButton />
                 </div>
             </header>
 
@@ -93,12 +91,7 @@ export default function PricingPage() {
                     </div>
                      <div className="mt-12 text-center">
                         <p className="mb-4 text-muted-foreground">Ready to just try it out?</p>
-                        <form action={signIn}>
-                            <Button size="lg" className="group">
-                                Start For Free
-                                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                            </Button>
-                        </form>
+                        <AuthButton isFreeTrial />
                     </div>
                 </section>
             </main>

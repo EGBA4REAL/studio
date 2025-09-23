@@ -4,9 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, BookOpen, BrainCircuit, Target } from 'lucide-react';
 import { Logo } from '@/components/ui/logo';
 import Link from 'next/link';
-import { signIn } from '@/app/actions';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { AuthButton } from '@/components/auth/auth-button';
 
 export default async function LandingPage() {
   const session = await getSession();
@@ -43,9 +43,7 @@ export default async function LandingPage() {
           <Button variant="ghost" asChild>
             <Link href="/pricing">Pricing</Link>
           </Button>
-          <form action={signIn}>
-            <Button>Sign In with Google</Button>
-          </form>
+          <AuthButton />
         </div>
       </header>
 
@@ -60,12 +58,9 @@ export default async function LandingPage() {
               Your gateway to the Nigerian curriculum, made interactive and
               accessible. Learn, practice, and excel from anywhere.
             </p>
-            <form action={signIn} className="mt-8">
-              <Button size="lg" className="group">
-                Get Started for Free
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </form>
+            <div className="mt-8">
+              <AuthButton isFreeTrial />
+            </div>
           </div>
         </section>
 

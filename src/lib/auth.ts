@@ -1,43 +1,52 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
-
-const MOCK_USER: User = {
-  id: '1',
-  name: 'Demo Student',
-  email: 'student@naijalearn.com',
-  avatarUrl: 'https://i.pravatar.cc/150?u=student@naijalearn.com',
-};
+import {Auth, getAuth} from 'firebase-admin/auth';
+import {app} from '@/lib/firebase-admin';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
-export async function getSession(): Promise<User | null> {
-  const cookieStore = cookies();
-  const session = cookieStore.get(SESSION_COOKIE_NAME);
-
-  if (session?.value) {
-    try {
-      const user = JSON.parse(session.value) as User;
-      return user;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  return null;
+async function getFirebaseAuth(): Promise<Auth> {
+  return getAuth(app);
 }
 
-export async function createSession() {
+export async function getSession(): Promise<User | null> {
   const cookieStore = cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, JSON.stringify(MOCK_USER), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 7, // One week
-    path: '/',
-  });
+  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+  if (!sessionCookie) {
+    return null;
+  }
+
+  try {
+    const auth = await getFirebaseAuth();
+    const decodedClaims = await auth.verifySessionCookie(sessionCookie, true);
+    const user: User = {
+        id: decodedClaims.uid,
+        name: decodedClaims.name || 'Anonymous',
+        email: decodedClaims.email || '',
+        avatarUrl: decodedClaims.picture || undefined,
+    };
+    return user;
+  } catch (error) {
+    console.error('Error verifying session cookie:', error);
+    return null;
+  }
+}
+
+export async function createSession(idToken: string) {
+    const auth = await getFirebaseAuth();
+    const expiresIn = 60 * 60 * 24 * 7 * 1000; // 7 days
+    const sessionCookie = await auth.createSessionCookie(idToken, { expiresIn });
+    
+    cookies().set(SESSION_COOKIE_NAME, sessionCookie, {
+        maxAge: expiresIn,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+    });
 }
 
 export async function deleteSession() {
-  const cookieStore = cookies();
-  cookieStore.delete(SESSION_COOKIE_NAME);
+  cookies().delete(SESSION_COOKIE_NAME);
 }

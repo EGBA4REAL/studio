@@ -11,8 +11,8 @@ import { generateStudyPlan } from '@/ai/flows/generate-study-plan';
 import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
 import { revalidatePath } from 'next/cache';
 
-export async function signIn() {
-  await createSession();
+export async function signIn(idToken: string) {
+  await createSession(idToken);
   redirect('/dashboard');
 }
 
@@ -33,7 +33,7 @@ export async function generateLessonAction(formData: FormData) {
     const { lessonContent } = await generateLessonFromTitle({ topicTitle });
     await updateTopicContent(topicId, lessonContent);
     revalidatePath(`/dashboard/topic/${topicId}/lesson`);
-  } catch (error) {
+  } catch (error) => {
     console.error('Failed to generate lesson:', error);
     // You could redirect with an error param here if you want to show a message
   }
