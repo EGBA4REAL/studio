@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, FileText, Sparkles, Lock, CheckCircle, ArrowRight } from 'lucide-react';
 import { LessonQA } from '@/components/qa/lesson-qa';
 import { Button } from '@/components/ui/button';
-import { generateLessonAction, markTopicAsCompleteAction } from '@/app/actions';
+import { generateLessonAction } from '@/app/actions';
 import { getSession } from '@/lib/auth';
 import Link from 'next/link';
 import { ProgressCompleteForm } from '@/components/progress/progress-complete-form';
