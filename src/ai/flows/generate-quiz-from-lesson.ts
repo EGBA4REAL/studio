@@ -10,37 +10,12 @@
 import {genkit, z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateQuizFromLessonInput, GenerateQuizFromLessonOutput } from '@/lib/types';
+import { GenerateQuizFromLessonInputSchema, GenerateQuizFromLessonOutputSchema } from '@/lib/types';
 
 const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
 });
-
-
-const GenerateQuizFromLessonInputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe(
-      'The text or HTML content of the lesson from which to generate the quiz.'
-    ),
-});
-
-const QuizQuestionSchema = z.object({
-  question: z.string(),
-  options: z.array(
-    z.object({
-      text: z.string(),
-      isCorrect: z.boolean(),
-    })
-  ),
-});
-
-const GenerateQuizFromLessonOutputSchema = z.object({
-  quiz: z.object({
-    questions: z.array(QuizQuestionSchema),
-  }),
-});
-
 
 const prompt = ai.definePrompt({
   name: 'generateQuizFromLessonPrompt',
@@ -63,7 +38,7 @@ const generateQuizFromLessonFlow = ai.defineFlow(
     inputSchema: GenerateQuizFromLessonInputSchema,
     outputSchema: GenerateQuizFromLessonOutputSchema,
   },
-  async (flowInput: GenerateQuizFromLessonInput) => {
+  async (flowInput: z.infer<typeof GenerateQuizFromLessonInputSchema>) => {
     const {output} = await prompt(flowInput);
     return output!;
   }

@@ -10,21 +10,11 @@
 import {genkit, z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { AnswerLessonQuestionInput, AnswerLessonQuestionOutput } from '@/lib/types';
+import { AnswerLessonQuestionInputSchema, AnswerLessonQuestionOutputSchema } from '@/lib/types';
 
 const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
-});
-
-const AnswerLessonQuestionInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  userQuestion: z.string().describe("The user's question about the lesson."),
-});
-
-const AnswerLessonQuestionOutputSchema = z.object({
-  answer: z
-    .string()
-    .describe("The generated answer to the user's question in HTML format."),
 });
 
 const prompt = ai.definePrompt({
@@ -53,7 +43,7 @@ const answerLessonQuestionFlow = ai.defineFlow(
     inputSchema: AnswerLessonQuestionInputSchema,
     outputSchema: AnswerLessonQuestionOutputSchema,
   },
-  async (flowInput: AnswerLessonQuestionInput) => {
+  async (flowInput: z.infer<typeof AnswerLessonQuestionInputSchema>) => {
     const {output} = await prompt(flowInput);
     return output!;
   }

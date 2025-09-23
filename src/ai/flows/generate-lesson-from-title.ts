@@ -10,26 +10,13 @@
 import {genkit, z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateLessonFromTitleInput, GenerateLessonFromTitleOutput } from '@/lib/types';
+import { GenerateLessonFromTitleInputSchema, GenerateLessonFromTitleOutputSchema } from '@/lib/types';
+
 
 const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
 });
-
-
-const GenerateLessonFromTitleInputSchema = z.object({
-  topicTitle: z
-    .string()
-    .describe('The title of the topic for which to generate lesson content.'),
-});
-
-
-const GenerateLessonFromTitleOutputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe('The generated lesson content in HTML format.'),
-});
-
 
 const prompt = ai.definePrompt({
   name: 'generateLessonFromTitlePrompt',
@@ -52,7 +39,7 @@ const generateLessonFromTitleFlow = ai.defineFlow(
     inputSchema: GenerateLessonFromTitleInputSchema,
     outputSchema: GenerateLessonFromTitleOutputSchema,
   },
-  async (flowInput: GenerateLessonFromTitleInput) => {
+  async (flowInput: z.infer<typeof GenerateLessonFromTitleInputSchema>) => {
     const {output} = await prompt(flowInput);
     return output!;
   }

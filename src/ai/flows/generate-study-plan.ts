@@ -10,32 +10,11 @@
 import {genkit, z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateStudyPlanInput, GenerateStudyPlanOutput } from '@/lib/types';
+import { GenerateStudyPlanInputSchema, GenerateStudyPlanOutputSchema } from '@/lib/types';
 
 const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
-});
-
-const GenerateStudyPlanInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  questions: z
-    .array(
-      z.object({
-        question: z.string(),
-        selectedAnswer: z.string(),
-        correctAnswer: z.string(),
-        isCorrect: z.boolean(),
-      })
-    )
-    .describe('The list of questions, user answers, and results.'),
-  score: z.number().describe("The user's final score."),
-  totalQuestions: z
-    .number()
-    .describe('The total number of questions in the quiz.'),
-});
-
-const GenerateStudyPlanOutputSchema = z.object({
-  studyPlan: z.string().describe('The personalized study plan in HTML format.'),
 });
 
 const prompt = ai.definePrompt({
@@ -72,7 +51,7 @@ const generateStudyPlanFlow = ai.defineFlow(
     inputSchema: GenerateStudyPlanInputSchema,
     outputSchema: GenerateStudyPlanOutputSchema,
   },
-  async (flowInput: GenerateStudyPlanInput) => {
+  async (flowInput: z.infer<typeof GenerateStudyPlanInputSchema>) => {
     const {output} = await prompt(flowInput);
     return output!;
   }

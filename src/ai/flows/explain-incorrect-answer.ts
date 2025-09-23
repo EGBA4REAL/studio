@@ -10,30 +10,11 @@
 import {genkit, z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { ExplainIncorrectAnswerInput, ExplainIncorrectAnswerOutput } from '@/lib/types';
+import { ExplainIncorrectAnswerInputSchema, ExplainIncorrectAnswerOutputSchema } from '@/lib/types';
 
 const ai = genkit({
   plugins: [googleAI()],
   model: 'googleai/gemini-2.5-flash',
-});
-
-
-const ExplainIncorrectAnswerInputSchema = z.object({
-  lessonContent: z.string().describe('The HTML content of the lesson.'),
-  question: z
-    .string()
-    .describe('The quiz question that was answered incorrectly.'),
-  selectedAnswer: z
-    .string()
-    .describe('The incorrect answer the user selected.'),
-  correctAnswer: z.string().describe('The correct answer for the question.'),
-});
-
-const ExplainIncorrectAnswerOutputSchema = z.object({
-  explanation: z
-    .string()
-    .describe(
-      'A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'
-    ),
 });
 
 const prompt = ai.definePrompt({
@@ -70,7 +51,7 @@ const explainIncorrectAnswerFlow = ai.defineFlow(
     inputSchema: ExplainIncorrectAnswerInputSchema,
     outputSchema: ExplainIncorrectAnswerOutputSchema,
   },
-  async (flowInput: ExplainIncorrectAnswerInput) => {
+  async (flowInput: z.infer<typeof ExplainIncorrectAnswerInputSchema>) => {
     const {output} = await prompt(flowInput);
     return output!;
   }
