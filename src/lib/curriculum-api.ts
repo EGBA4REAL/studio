@@ -1,3 +1,4 @@
+'use server';
 import 'server-only';
 import { levels, classes, subjects, topics } from './mock-data';
 import type { Class, Subject, Topic, Level } from './types';

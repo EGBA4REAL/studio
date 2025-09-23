@@ -1,3 +1,4 @@
+'use server';
 import admin from 'firebase-admin';
 import { getApps, initializeApp, cert, App } from 'firebase-admin/app';
 
@@ -7,7 +8,7 @@ const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT_KEY
 
 // Use a function to avoid initializing multiple times
 const initializeAdminApp = (): App => {
-  const adminAppName = 'firebase-admin-app';
+  const adminAppName = 'firebase-admin-app-server'; // Use a unique name
   const existingApp = getApps().find(app => app.name === adminAppName);
   if (existingApp) {
     return existingApp;
