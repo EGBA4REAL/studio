@@ -12,24 +12,24 @@ import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateQuizFromLessonInput, GenerateQuizFromLessonOutput } from '@/lib/types';
 import { QuizQuestionSchema } from '@/lib/schemas';
 
-const GenerateQuizFromLessonInputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe(
-      'The text or HTML content of the lesson from which to generate the quiz.'
-    ),
-});
-
-const GenerateQuizFromLessonOutputSchema = z.object({
-  quiz: z.object({
-    questions: z.array(QuizQuestionSchema),
-  }),
-});
-
 
 export async function generateQuizFromLesson(
   input: GenerateQuizFromLessonInput
 ): Promise<GenerateQuizFromLessonOutput> {
+  const GenerateQuizFromLessonInputSchema = z.object({
+    lessonContent: z
+      .string()
+      .describe(
+        'The text or HTML content of the lesson from which to generate the quiz.'
+      ),
+  });
+
+  const GenerateQuizFromLessonOutputSchema = z.object({
+    quiz: z.object({
+      questions: z.array(QuizQuestionSchema),
+    }),
+  });
+
   const ai = genkit({
     plugins: [googleAI()],
     model: 'googleai/gemini-2.5-flash',

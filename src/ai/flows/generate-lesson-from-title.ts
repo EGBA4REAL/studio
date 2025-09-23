@@ -11,22 +11,22 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateLessonFromTitleInput, GenerateLessonFromTitleOutput } from '@/lib/types';
 
-const GenerateLessonFromTitleInputSchema = z.object({
-  topicTitle: z
-    .string()
-    .describe('The title of the topic for which to generate lesson content.'),
-});
-
-const GenerateLessonFromTitleOutputSchema = z.object({
-  lessonContent: z
-    .string()
-    .describe('The generated lesson content in HTML format.'),
-});
-
 export async function generateLessonFromTitle(
   input: GenerateLessonFromTitleInput
 ): Promise<GenerateLessonFromTitleOutput> {
-   const ai = genkit({
+  const GenerateLessonFromTitleInputSchema = z.object({
+    topicTitle: z
+      .string()
+      .describe('The title of the topic for which to generate lesson content.'),
+  });
+
+  const GenerateLessonFromTitleOutputSchema = z.object({
+    lessonContent: z
+      .string()
+      .describe('The generated lesson content in HTML format.'),
+  });
+
+  const ai = genkit({
     plugins: [googleAI()],
     model: 'googleai/gemini-2.5-flash',
   });
