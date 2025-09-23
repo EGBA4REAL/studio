@@ -5,7 +5,6 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
 import { adminAuth, adminDb } from '@/lib/firebase-admin';
-import { FieldValue } from 'firebase-admin/firestore';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
@@ -77,6 +76,9 @@ export async function updateUserProgress(topicId: string) {
   if (!user) {
     throw new Error('User not authenticated');
   }
+
+  // Inline import to avoid top-level object import in a 'use server' file.
+  const { FieldValue } = await import('firebase-admin/firestore');
 
   const userRef = adminDb.collection('users').doc(user.id);
   await userRef.update({
