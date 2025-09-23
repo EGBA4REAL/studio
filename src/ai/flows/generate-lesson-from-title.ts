@@ -12,14 +12,21 @@ import type {
   GenerateLessonFromTitleInput,
   GenerateLessonFromTitleOutput,
 } from '@/lib/types';
-import {
-  GenerateLessonFromTitleInputSchema,
-  GenerateLessonFromTitleOutputSchema,
-} from '@/lib/types';
+import {z} from 'genkit';
 
-const ai = getAi();
+const GenerateLessonFromTitleInputSchema = z.object({
+  topicTitle: z
+    .string()
+    .describe('The title of the topic for which to generate lesson content.'),
+});
 
-const prompt = ai.definePrompt({
+const GenerateLessonFromTitleOutputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe('The generated lesson content in HTML format.'),
+});
+
+const prompt = getAi().definePrompt({
   name: 'generateLessonFromTitlePrompt',
   input: {schema: GenerateLessonFromTitleInputSchema},
   output: {schema: GenerateLessonFromTitleOutputSchema},
@@ -34,7 +41,7 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const generateLessonFromTitleFlow = ai.defineFlow(
+const generateLessonFromTitleFlow = getAi().defineFlow(
   {
     name: 'generateLessonFromTitleFlow',
     inputSchema: GenerateLessonFromTitleInputSchema,

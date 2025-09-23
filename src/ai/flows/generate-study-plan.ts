@@ -12,14 +12,32 @@ import type {
   GenerateStudyPlanInput,
   GenerateStudyPlanOutput,
 } from '@/lib/types';
-import {
-  GenerateStudyPlanInputSchema,
-  GenerateStudyPlanOutputSchema,
-} from '@/lib/types';
+import {z} from 'genkit';
 
-const ai = getAi();
+const GenerateStudyPlanInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  questions: z
+    .array(
+      z.object({
+        question: z.string(),
+        selectedAnswer: z.string(),
+        correctAnswer: z.string(),
+        isCorrect: z.boolean(),
+      })
+    )
+    .describe('The list of questions, user answers, and results.'),
+  score: z.number().describe("The user's final score."),
+  totalQuestions: z
+    .number()
+    .describe('The total number of questions in the quiz.'),
+});
 
-const prompt = ai.definePrompt({
+const GenerateStudyPlanOutputSchema = z.object({
+  studyPlan: z.string().describe('The personalized study plan in HTML format.'),
+});
+
+
+const prompt = getAi().definePrompt({
   name: 'generateStudyPlanPrompt',
   input: {schema: GenerateStudyPlanInputSchema},
   output: {schema: GenerateStudyPlanOutputSchema},
@@ -47,7 +65,7 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const generateStudyPlanFlow = ai.defineFlow(
+const generateStudyPlanFlow = getAi().defineFlow(
   {
     name: 'generateStudyPlanFlow',
     inputSchema: GenerateStudyPlanInputSchema,

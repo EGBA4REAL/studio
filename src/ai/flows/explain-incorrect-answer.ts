@@ -12,14 +12,29 @@ import type {
   ExplainIncorrectAnswerInput,
   ExplainIncorrectAnswerOutput,
 } from '@/lib/types';
-import {
-  ExplainIncorrectAnswerInputSchema,
-  ExplainIncorrectAnswerOutputSchema,
-} from '@/lib/types';
+import {z} from 'genkit';
 
-const ai = getAi();
+const ExplainIncorrectAnswerInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  question: z
+    .string()
+    .describe('The quiz question that was answered incorrectly.'),
+  selectedAnswer: z
+    .string()
+    .describe('The incorrect answer the user selected.'),
+  correctAnswer: z.string().describe('The correct answer for the question.'),
+});
 
-const prompt = ai.definePrompt({
+const ExplainIncorrectAnswerOutputSchema = z.object({
+  explanation: z
+    .string()
+    .describe(
+      'A clear explanation in HTML format about why the answer was incorrect, based on the lesson content.'
+    ),
+});
+
+
+const prompt = getAi().definePrompt({
   name: 'explainIncorrectAnswerPrompt',
   input: {schema: ExplainIncorrectAnswerInputSchema},
   output: {schema: ExplainIncorrectAnswerOutputSchema},
@@ -47,7 +62,7 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const explainIncorrectAnswerFlow = ai.defineFlow(
+const explainIncorrectAnswerFlow = getAi().defineFlow(
   {
     name: 'explainIncorrectAnswerFlow',
     inputSchema: ExplainIncorrectAnswerInputSchema,

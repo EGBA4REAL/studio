@@ -12,14 +12,21 @@ import type {
   AnswerLessonQuestionInput,
   AnswerLessonQuestionOutput,
 } from '@/lib/types';
-import {
-  AnswerLessonQuestionInputSchema,
-  AnswerLessonQuestionOutputSchema,
-} from '@/lib/types';
+import {z} from 'genkit';
 
-const ai = getAi();
+const AnswerLessonQuestionInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  userQuestion: z.string().describe("The user's question about the lesson."),
+});
 
-const prompt = ai.definePrompt({
+const AnswerLessonQuestionOutputSchema = z.object({
+  answer: z
+    .string()
+    .describe("The generated answer to the user's question in HTML format."),
+});
+
+
+const prompt = getAi().definePrompt({
   name: 'answerLessonQuestionPrompt',
   input: {schema: AnswerLessonQuestionInputSchema},
   output: {schema: AnswerLessonQuestionOutputSchema},
@@ -39,7 +46,7 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const answerLessonQuestionFlow = ai.defineFlow(
+const answerLessonQuestionFlow = getAi().defineFlow(
   {
     name: 'answerLessonQuestionFlow',
     inputSchema: AnswerLessonQuestionInputSchema,

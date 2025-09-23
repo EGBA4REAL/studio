@@ -12,14 +12,34 @@ import type {
   GenerateQuizFromLessonInput,
   GenerateQuizFromLessonOutput,
 } from '@/lib/types';
-import {
-  GenerateQuizFromLessonInputSchema,
-  GenerateQuizFromLessonOutputSchema,
-} from '@/lib/types';
+import {z} from 'genkit';
 
-const ai = getAi();
+const GenerateQuizFromLessonInputSchema = z.object({
+  lessonContent: z
+    .string()
+    .describe(
+      'The text or HTML content of the lesson from which to generate the quiz.'
+    ),
+});
 
-const prompt = ai.definePrompt({
+const QuizQuestionSchema = z.object({
+  question: z.string(),
+  options: z.array(
+    z.object({
+      text: z.string(),
+      isCorrect: z.boolean(),
+    })
+  ),
+});
+
+const GenerateQuizFromLessonOutputSchema = z.object({
+  quiz: z.object({
+    questions: z.array(QuizQuestionSchema),
+  }),
+});
+
+
+const prompt = getAi().definePrompt({
   name: 'generateQuizFromLessonPrompt',
   input: {schema: GenerateQuizFromLessonInputSchema},
   output: {schema: GenerateQuizFromLessonOutputSchema, format: 'json'},
@@ -34,7 +54,7 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const generateQuizFromLessonFlow = ai.defineFlow(
+const generateQuizFromLessonFlow = getAi().defineFlow(
   {
     name: 'generateQuizFromLessonFlow',
     inputSchema: GenerateQuizFromLessonInputSchema,
