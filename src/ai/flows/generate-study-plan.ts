@@ -11,31 +11,31 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import type { GenerateStudyPlanInput, GenerateStudyPlanOutput } from '@/lib/types';
 
+const GenerateStudyPlanInputSchema = z.object({
+  lessonContent: z.string().describe('The HTML content of the lesson.'),
+  questions: z
+    .array(
+      z.object({
+        question: z.string(),
+        selectedAnswer: z.string(),
+        correctAnswer: z.string(),
+        isCorrect: z.boolean(),
+      })
+    )
+    .describe('The list of questions, user answers, and results.'),
+  score: z.number().describe("The user's final score."),
+  totalQuestions: z
+    .number()
+    .describe('The total number of questions in the quiz.'),
+});
+
+const GenerateStudyPlanOutputSchema = z.object({
+  studyPlan: z.string().describe('The personalized study plan in HTML format.'),
+});
+
 export async function generateStudyPlan(
   input: GenerateStudyPlanInput
 ): Promise<GenerateStudyPlanOutput> {
-  const GenerateStudyPlanInputSchema = z.object({
-    lessonContent: z.string().describe('The HTML content of the lesson.'),
-    questions: z
-      .array(
-        z.object({
-          question: z.string(),
-          selectedAnswer: z.string(),
-          correctAnswer: z.string(),
-          isCorrect: z.boolean(),
-        })
-      )
-      .describe('The list of questions, user answers, and results.'),
-    score: z.number().describe("The user's final score."),
-    totalQuestions: z
-      .number()
-      .describe('The total number of questions in the quiz.'),
-  });
-
-  const GenerateStudyPlanOutputSchema = z.object({
-    studyPlan: z.string().describe('The personalized study plan in HTML format.'),
-  });
-  
   const ai = genkit({
     plugins: [googleAI()],
     model: 'googleai/gemini-2.5-flash',
