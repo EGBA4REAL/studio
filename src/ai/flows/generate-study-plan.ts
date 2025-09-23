@@ -7,8 +7,14 @@
  * - generateStudyPlan - A function that generates a study plan.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {genkit, z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
+import type { GenerateStudyPlanInput, GenerateStudyPlanOutput } from '@/lib/types';
+
+const ai = genkit({
+  plugins: [googleAI()],
+  model: 'googleai/gemini-2.5-flash',
+});
 
 const GenerateStudyPlanInputSchema = z.object({
   lessonContent: z.string().describe('The HTML content of the lesson.'),
@@ -27,16 +33,10 @@ const GenerateStudyPlanInputSchema = z.object({
     .number()
     .describe('The total number of questions in the quiz.'),
 });
-export type GenerateStudyPlanInput = z.infer<
-  typeof GenerateStudyPlanInputSchema
->;
 
 const GenerateStudyPlanOutputSchema = z.object({
   studyPlan: z.string().describe('The personalized study plan in HTML format.'),
 });
-export type GenerateStudyPlanOutput = z.infer<
-  typeof GenerateStudyPlanOutputSchema
->;
 
 const prompt = ai.definePrompt({
   name: 'generateStudyPlanPrompt',

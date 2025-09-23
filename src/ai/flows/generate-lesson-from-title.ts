@@ -7,26 +7,29 @@
  * - generateLessonFromTitle - A function that generates lesson content.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {genkit, z} from 'genkit';
+import {googleAI} from '@genkit-ai/googleai';
+import type { GenerateLessonFromTitleInput, GenerateLessonFromTitleOutput } from '@/lib/types';
+
+const ai = genkit({
+  plugins: [googleAI()],
+  model: 'googleai/gemini-2.5-flash',
+});
+
 
 const GenerateLessonFromTitleInputSchema = z.object({
   topicTitle: z
     .string()
     .describe('The title of the topic for which to generate lesson content.'),
 });
-export type GenerateLessonFromTitleInput = z.infer<
-  typeof GenerateLessonFromTitleInputSchema
->;
+
 
 const GenerateLessonFromTitleOutputSchema = z.object({
   lessonContent: z
     .string()
     .describe('The generated lesson content in HTML format.'),
 });
-export type GenerateLessonFromTitleOutput = z.infer<
-  typeof GenerateLessonFromTitleOutputSchema
->;
+
 
 const prompt = ai.definePrompt({
   name: 'generateLessonFromTitlePrompt',
