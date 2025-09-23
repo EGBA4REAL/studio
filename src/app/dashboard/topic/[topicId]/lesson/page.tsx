@@ -1,3 +1,4 @@
+
 import { getTopicById, getSubjectById, getClassById, getLevelById } from '@/lib/curriculum-api';
 import { notFound, redirect } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';

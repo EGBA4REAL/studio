@@ -1,10 +1,11 @@
+
 'use client';
 
 import { useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { markTopicAsCompleteAction } from '@/app/actions';
 import { CheckCircle, Loader2 } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '../ui/tooltip';
 
 function SubmitButton({ isCompleted }: { isCompleted: boolean }) {
   const { pending } = useFormStatus();
@@ -19,26 +20,28 @@ function SubmitButton({ isCompleted }: { isCompleted: boolean }) {
   }
 
   return (
-    <Tooltip>
-        <TooltipTrigger asChild>
-            <Button type="submit" disabled={pending}>
-            {pending ? (
-                <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Marking as complete...
-                </>
-            ) : (
-                <>
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Mark as Complete
-                </>
-            )}
-            </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-            <p>Click here to save your progress for this topic.</p>
-        </TooltipContent>
-    </Tooltip>
+    <TooltipProvider>
+      <Tooltip>
+          <TooltipTrigger asChild>
+              <Button type="submit" disabled={pending}>
+              {pending ? (
+                  <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Marking as complete...
+                  </>
+              ) : (
+                  <>
+                  <CheckCircle className="mr-2 h-4 w-4" />
+                  Mark as Complete
+                  </>
+              )}
+              </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+              <p>Click here to save your progress for this topic.</p>
+          </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
