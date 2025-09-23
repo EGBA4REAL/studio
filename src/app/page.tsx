@@ -44,7 +44,7 @@ export default async function LandingPage() {
             <Link href="/pricing">Pricing</Link>
           </Button>
           <form action={signIn}>
-            <Button>Sign In & Start Learning</Button>
+            <Button>Sign In with Google</Button>
           </form>
         </div>
       </header>
