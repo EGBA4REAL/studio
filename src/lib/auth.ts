@@ -4,12 +4,14 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
-import { adminAuth, adminDb } from '@/lib/firebase-admin';
+import { getAdminAuth, getAdminDb } from '@/lib/firebase-admin';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
 export async function getSession(): Promise<User | null> {
   const sessionCookie = cookies().get(SESSION_COOKIE_NAME)?.value;
+  const adminAuth = await getAdminAuth();
+  const adminDb = await getAdminDb();
 
   if (!sessionCookie) {
     return null;
@@ -36,6 +38,8 @@ export async function getSession(): Promise<User | null> {
 }
 
 export async function createSession(idToken: string) {
+    const adminAuth = await getAdminAuth();
+    const adminDb = await getAdminDb();
     const decodedToken = await adminAuth.verifyIdToken(idToken);
     const uid = decodedToken.uid;
     const expiresIn = 60 * 60 * 24 * 7 * 1000; // 7 days
@@ -72,6 +76,7 @@ export async function deleteSession() {
 
 
 export async function updateUserProgress(topicId: string) {
+  const adminDb = await getAdminDb();
   const user = await getSession();
   if (!user) {
     throw new Error('User not authenticated');
