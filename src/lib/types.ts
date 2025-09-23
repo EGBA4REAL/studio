@@ -1,4 +1,3 @@
-
 import {z} from 'genkit';
 
 export interface User {

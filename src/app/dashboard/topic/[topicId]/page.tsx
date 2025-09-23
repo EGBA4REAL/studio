@@ -65,8 +65,10 @@ export default async function TopicPage({ params }: { params: { topicId: string 
             <p className="text-muted-foreground mb-4">
               Review supplementary materials and notes.
             </p>
-            <Button variant="secondary" className="w-full" disabled>
-              View Materials
+            <Button asChild variant="secondary" className="w-full">
+              <Link href={`/dashboard/topic/${topic.id}/materials`}>
+                View Materials
+              </Link>
             </Button>
           </CardContent>
         </Card>
