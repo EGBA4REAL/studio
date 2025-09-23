@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -24,39 +25,16 @@ export async function generateQuizFromLesson(
 const prompt = ai.definePrompt({
   name: 'generateQuizFromLessonPrompt',
   input: {schema: GenerateQuizFromLessonInputSchema},
-  output: {schema: GenerateQuizFromLessonOutputSchema},
+  output: {schema: GenerateQuizFromLessonOutputSchema, format: 'json'},
   prompt: `You are a teacher who is creating a quiz based on the content of a lesson.
 
   The lesson content is provided below:
-  {{lessonContent}}
+  {{{lessonContent}}}
 
-  Create a quiz with multiple-choice questions based on the lesson content. The quiz should be returned in JSON format.
+  Create a quiz with multiple-choice questions based on the lesson content.
   Each question should have 4 options, one of which is the correct answer. Mark the correct answer.
-  {
-  "questions": [
-  {
-  "question": "",
-  "options": [
-  {
-  "text": "",
-  "isCorrect": false
-  },
-  {
-  "text": "",
-  "isCorrect": false
-  },
-  {
-  "text": "",
-  "isCorrect": false
-  },
-  {
-  "text": "",
-  "isCorrect": true
-  }
-  ]
-  }
-  ]
-  }`,
+  Return the quiz in the format specified in the output schema.
+  `,
 });
 
 const generateQuizFromLessonFlow = ai.defineFlow(

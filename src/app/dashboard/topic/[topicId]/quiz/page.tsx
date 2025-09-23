@@ -26,8 +26,14 @@ export default async function QuizPage({
   if (searchParams.data) {
     try {
       const decodedData = decodeURIComponent(searchParams.data);
-      quiz = JSON.parse(decodedData);
-      if (!quiz || !Array.isArray(quiz.questions)) {
+      const parsedData = JSON.parse(decodedData);
+      
+      // The AI might return the quiz nested under a 'quiz' key.
+      const quizData = parsedData.quiz ? parsedData.quiz : parsedData;
+
+      if (quizData && Array.isArray(quizData.questions)) {
+        quiz = quizData;
+      } else {
         quiz = null;
         parseError = true;
       }
@@ -47,38 +53,7 @@ export default async function QuizPage({
                     <AlertTitle>Error Loading Quiz</AlertTitle>
                     <AlertDescription>
                     There was a problem loading the quiz data. It might be invalid or corrupted.
-                    </Aidebar-accent-foreground
-    );
-  }
-}
-
-export {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupAction,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInput,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSkeleton,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
-  useSidebar,
-}
-ltDescription>
+                    </AlertDescription>
                 </Alert>
                 <Button asChild className="mt-6">
                     <Link href={`/dashboard/topic/${topic.id}`}>Go Back to Topic</Link>

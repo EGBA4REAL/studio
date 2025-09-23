@@ -7,6 +7,8 @@ import { generateQuizFromLesson } from '@/ai/flows/generate-quiz-from-lesson';
 import { answerLessonQuestion } from '@/ai/flows/answer-lesson-question';
 import { explainIncorrectAnswer } from '@/ai/flows/explain-incorrect-answer';
 import { generateLessonFromTitle } from '@/ai/flows/generate-lesson-from-title';
+import { generateStudyPlan } from '@/ai/flows/generate-study-plan';
+import type { GenerateStudyPlanInput } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 
 export async function signIn(idToken: string) {
@@ -51,11 +53,12 @@ export async function generateQuizAction(formData: FormData) {
   }
 
   try {
-    const { quiz } = await generateQuizFromLesson({
+    const quizData = await generateQuizFromLesson({
       lessonContent: topic.lessonContent,
     });
     
-    const encodedQuiz = encodeURIComponent(quiz);
+    // The flow now returns a JSON object, so we stringify it
+    const encodedQuiz = encodeURIComponent(JSON.stringify(quizData.quiz));
     const path = `/dashboard/topic/${topicId}/quiz?data=${encodedQuiz}`;
     
     redirect(path);
@@ -120,4 +123,27 @@ export async function getExplanationAction(prevState: any, formData: FormData) {
         console.error("Error getting explanation", e);
         return { error: "Could not load explanation." }
     }
+}
+
+
+export async function getStudyPlanAction(prevState: any, formData: FormData) {
+  try {
+    const input: GenerateStudyPlanInput = {
+      lessonContent: formData.get('lessonContent') as string,
+      score: parseInt(formData.get('score') as string),
+      totalQuestions: parseInt(formData.get('totalQuestions') as string),
+      questions: JSON.parse(formData.get('questions') as string),
+    };
+
+     if (!input.lessonContent || isNaN(input.score) || isNaN(input.totalQuestions) || !input.questions) {
+        return { error: "Missing required fields for study plan." };
+    }
+
+    const { studyPlan } = await generateStudyPlan(input);
+    return { studyPlan };
+
+  } catch(e) {
+      console.error("Error getting study plan", e);
+      return { error: "Could not load study plan." }
+  }
 }

@@ -1,3 +1,4 @@
+
 import {z} from 'genkit';
 
 export interface User {
@@ -127,9 +128,20 @@ export type GenerateQuizFromLessonInput = z.infer<
   typeof GenerateQuizFromLessonInputSchema
 >;
 
-export const GenerateQuizFromLessonOutputSchema = z.object({
-  quiz: z.string().describe('The generated quiz in JSON format.'),
+const QuizQuestionSchema = z.object({
+  question: z.string(),
+  options: z.array(z.object({
+    text: z.string(),
+    isCorrect: z.boolean(),
+  })),
 });
+
+export const GenerateQuizFromLessonOutputSchema = z.object({
+  quiz: z.object({
+    questions: z.array(QuizQuestionSchema),
+  })
+});
+
 export type GenerateQuizFromLessonOutput = z.infer<
   typeof GenerateQuizFromLessonOutputSchema
 >;

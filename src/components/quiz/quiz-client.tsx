@@ -6,15 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
-import { CheckCircle, XCircle, Award, RotateCw, Lightbulb, Loader2 } from 'lucide-react';
+import { CheckCircle, XCircle, Award, RotateCw, Lightbulb, Loader2, BookCheck } from 'lucide-react';
 import Link from 'next/link';
-import { getExplanationAction } from '@/app/actions';
+import { getExplanationAction, getStudyPlanAction } from '@/app/actions';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-
-interface QuizClientProps {
-  quiz: Quiz;
-  topic: Topic;
-}
 
 interface AnswerResult {
     question: string;
@@ -30,6 +25,7 @@ function Explanation({ isCorrect, ...props }: { isCorrect: boolean, lessonConten
 
     const getExplanation = async () => {
         setLoading(true);
+        setError("");
         const formData = new FormData();
         formData.append('lessonContent', props.lessonContent);
         formData.append('question', props.question);
@@ -60,7 +56,52 @@ function Explanation({ isCorrect, ...props }: { isCorrect: boolean, lessonConten
     </div>
 }
 
-export function QuizClient({ quiz, topic }: QuizClientProps) {
+function StudyPlan({ topic, results, score }: { topic: Topic, results: AnswerResult[], score: number }) {
+    const [studyPlan, setStudyPlan] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    const getStudyPlan = async () => {
+        setLoading(true);
+        setError("");
+        const formData = new FormData();
+        formData.append('lessonContent', topic.lessonContent);
+        formData.append('score', score.toString());
+        formData.append('totalQuestions', results.length.toString());
+        formData.append('questions', JSON.stringify(results));
+        
+        const res = await getStudyPlanAction(null, formData);
+        if (res.error) {
+            setError(res.error);
+        } else if (res.studyPlan) {
+            setStudyPlan(res.studyPlan);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        getStudyPlan();
+    }, []);
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="flex items-center gap-2 font-headline">
+                    <BookCheck className="w-6 h-6 text-primary" />
+                    Personalized Study Plan
+                </CardTitle>
+                <CardDescription>Based on your quiz results, here are some topics to focus on.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {loading && <div className="flex items-center gap-2 mt-2"><Loader2 className="animate-spin w-4 h-4" /> Generating your study plan...</div>}
+                {error && <Alert variant="destructive" className="mt-2">{error}</Alert>}
+                {studyPlan && <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: studyPlan }} />}
+            </CardContent>
+        </Card>
+    );
+}
+
+export function QuizClient({ quiz, topic }: { quiz: Quiz; topic: Topic }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptionIndex, setSelectedOptionIndex] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
@@ -143,6 +184,8 @@ export function QuizClient({ quiz, topic }: QuizClientProps) {
               </Button>
           </CardFooter>
         </Card>
+
+        <StudyPlan topic={topic} results={results} score={score} />
       </div>
     );
   }
