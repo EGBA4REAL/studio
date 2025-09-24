@@ -3,7 +3,7 @@
 
 import 'server-only';
 import admin from 'firebase-admin';
-import { getApps, initializeApp, cert, App } from 'firebase-admin/app';
+import { getApps, initializeApp, cert, type App } from 'firebase-admin/app';
 import type { Auth } from 'firebase-admin/auth';
 import type { Firestore } from 'firebase-admin/firestore';
 
