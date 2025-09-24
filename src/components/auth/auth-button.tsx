@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -9,7 +10,6 @@ import { Loader2, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const provider = new GoogleAuthProvider();
-const auth = getAuth(app);
 
 interface AuthButtonProps {
     isFreeTrial?: boolean;
@@ -22,6 +22,7 @@ export function AuthButton({ isFreeTrial = false }: AuthButtonProps) {
   const handleSignIn = async () => {
     setLoading(true);
     try {
+      const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       if (user) {
