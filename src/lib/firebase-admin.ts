@@ -12,33 +12,28 @@ let adminAuth: Auth | null = null;
 let adminDb: Firestore | null = null;
 
 function initializeFirebaseAdmin() {
-  if (adminApp) {
-    return;
-  }
-
-  if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+  if (getApps().some(app => app.name === 'admin')) {
+      adminApp = admin.app('admin');
+  } else if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     try {
-      adminApp = !getApps().length
-        ? initializeApp({
-            credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)),
-          })
-        : admin.app();
-      
-      adminAuth = adminApp.auth();
-      adminDb = adminApp.firestore();
+      adminApp = initializeApp({
+          credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)),
+      }, 'admin');
     } catch (error: any) {
        console.error("Firebase Admin SDK initialization error:", error.stack);
+    }
+  } else {
+      console.warn("FIREBASE_SERVICE_ACCOUNT_KEY is not set. Firebase Admin SDK is not initialized.");
+  }
+  
+  if (adminApp) {
+      adminAuth = admin.auth(adminApp);
+      adminDb = admin.firestore(adminApp);
+  } else {
        // Set to dummy objects to prevent app crash on subsequent calls
        adminApp = {} as App;
        adminAuth = {} as Auth;
        adminDb = {} as Firestore;
-    }
-  } else {
-      console.warn("FIREBASE_SERVICE_ACCOUNT_KEY is not set. Firebase Admin SDK is not initialized. This is expected for local development if not using server-side Firebase features.");
-      // Set to dummy objects if not initialized to prevent app from crashing on import
-      adminApp = {} as App;
-      adminAuth = {} as Auth;
-      adminDb = {} as Firestore;
   }
 }
 
