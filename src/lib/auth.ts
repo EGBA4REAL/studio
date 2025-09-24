@@ -5,19 +5,22 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
 import { getAdminAuth, getAdminDb } from '@/lib/firebase-admin';
+import type { Auth } from 'firebase-admin/auth';
+import type { Firestore } from 'firebase-admin/firestore';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
 export async function getSession(): Promise<User | null> {
-  const sessionCookie = cookies().get(SESSION_COOKIE_NAME)?.value;
-  const adminAuth = await getAdminAuth();
-  const adminDb = await getAdminDb();
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
   if (!sessionCookie) {
     return null;
   }
-
+  
   try {
+    const adminAuth = await getAdminAuth();
+    const adminDb = await getAdminDb();
     const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
     
     // Get user data from Firestore
@@ -32,7 +35,7 @@ export async function getSession(): Promise<User | null> {
   } catch (error) {
     console.error('Error verifying session cookie or fetching user:', error);
     // Clear the invalid cookie
-    cookies().delete(SESSION_COOKIE_NAME);
+    cookieStore.delete(SESSION_COOKIE_NAME);
     return null;
   }
 }
@@ -76,12 +79,12 @@ export async function deleteSession() {
 
 
 export async function updateUserProgress(topicId: string) {
-  const adminDb = await getAdminDb();
   const user = await getSession();
   if (!user) {
     throw new Error('User not authenticated');
   }
-
+  
+  const adminDb = await getAdminDb();
   // Inline import to avoid top-level object import in a 'use server' file.
   const { FieldValue } = await import('firebase-admin/firestore');
 
