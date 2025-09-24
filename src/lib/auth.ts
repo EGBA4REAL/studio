@@ -5,8 +5,6 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import type { User } from './types';
 import { getAdminAuth, getAdminDb } from '@/lib/firebase-admin';
-import type { Auth } from 'firebase-admin/auth';
-import type { Firestore } from 'firebase-admin/firestore';
 
 const SESSION_COOKIE_NAME = 'naijalearn_session';
 
