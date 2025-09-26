@@ -1,17 +1,20 @@
 
-import { initializeApp, getApp, getApps } from 'firebase/app';
+
+// Client-side Firebase setup
+import { initializeApp, getApps } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  "projectId": "studio-9108138070-ae764",
-  "appId": "1:569612845856:web:4dfcffc1bd706f26da4d45",
-  "apiKey": "AIzaSyAxP3eNYP1BzM3vKUjuWjuSVVftpEMnSC8",
-  "authDomain": "studio-9108138070-ae764.firebaseapp.com",
-  "storageBucket": "studio-9108138070-ae764.appspot.com",
-  "messagingSenderId": "569612845856",
-  "measurementId": "G-93S4JS065W"
-};
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+          messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+            appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+            };
 
-// Initialize Firebase
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+            const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 
-export { app };
+            export const auth = getAuth(app);
+            export const db = getFirestore(app

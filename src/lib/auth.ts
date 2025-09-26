@@ -1,93 +1,51 @@
 
-'use server';
+"use server";
 
-import 'server-only';
-import { cookies } from 'next/headers';
-import type { User } from './types';
-import { getAdminAuth, getAdminDb } from '@/lib/firebase-admin';
+import { cookies } from "next/headers";
+import { auth } from "./fireebase";
+import type { Auth } from "firebase/auth";
 
-const SESSION_COOKIE_NAME = 'naijalearn_session';
-
-export async function getSession(): Promise<User | null> {
-  const cookieStore = cookies();
-  const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
-  if (!sessionCookie) {
-    return null;
-  }
-  
-  try {
-    const adminAuth = await getAdminAuth();
-    const adminDb = await getAdminDb();
-    const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie, true);
-    
-    // Get user data from Firestore
-    const userDoc = await adminDb.collection('users').doc(decodedClaims.uid).get();
-    
-    if (!userDoc.exists) {
-      // This case should ideally not happen if user is created on first login
-      return null;
+// Session handling
+export async function getSession() {
+  const cookieStore = await cookies();
+    return cookieStore.get("session")?.value || null;
     }
 
-    return userDoc.data() as User;
-  } catch (error) {
-    console.error('Error verifying session cookie or fetching user:', error);
-    // Clear the invalid cookie
-    cookieStore.delete(SESSION_COOKIE_NAME);
-    return null;
-  }
-}
+    // This function no longer imports admin SDK directly.
+    // Instead, `actions.ts` will inject the correct adminAuth & adminDb.
+    export async function createSession(token: string, adminAuth: any, adminDb: any) {
+      const decoded = await adminAuth.verifyIdToken(token);
+        await adminDb.collection("sessions").doc(decoded.uid).set({
+            createdAt: Date.now(),
+              });
 
-export async function createSession(idToken: string) {
-    const adminAuth = await getAdminAuth();
-    const adminDb = await getAdminDb();
-    const decodedToken = await adminAuth.verifyIdToken(idToken);
-    const uid = decodedToken.uid;
-    const expiresIn = 60 * 60 * 24 * 7 * 1000; // 7 days
+                const cookieStore = await cookies();
+                  cookieStore.set("session", token, { httpOnly: true, secure: true });
+                    return true;
+                    }
 
-    // Check if user exists in Firestore, create if not
-    const userRef = adminDb.collection('users').doc(uid);
-    const userDoc = await userRef.get();
+                    "use server";
 
-    if (!userDoc.exists) {
-      const newUser: User = {
-        id: uid,
-        name: decodedToken.name || 'Anonymous',
-        email: decodedToken.email || '',
-        avatarUrl: decodedToken.picture || undefined,
-        subscription: { status: 'free' },
-        progress: { completedTopics: [] },
-      };
-      await userRef.set(newUser);
-    }
-    
-    const sessionCookie = await adminAuth.createSessionCookie(idToken, { expiresIn });
-    
-    cookies().set(SESSION_COOKIE_NAME, sessionCookie, {
-        maxAge: expiresIn,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-    });
-}
+                    import { cookies } from "next/headers";
+                    import { auth } from "./firebase";
+                    import type { Auth } from "firebase/auth";
 
-export async function deleteSession() {
-  cookies().delete(SESSION_COOKIE_NAME);
-}
+                    // Session handling
+                    export async function getSession() {
+                      const cookieStore = await cookies();
+                        return cookieStore.get("session")?.value || null;
+                        }
 
+                        // This function no longer imports admin SDK directly.
+                        // Instead, `actions.ts` will inject the correct adminAuth & adminDb.
+                        export async function createSession(token: string, adminAuth: any, adminDb: any) {
+                          const decoded = await adminAuth.verifyIdToken(token);
+                            await adminDb.collection("sessions").doc(decoded.uid).set({
+                                createdAt: Date.now(),
+                                  });
 
-export async function updateUserProgress(topicId: string) {
-  const user = await getSession();
-  if (!user) {
-    throw new Error('User not authenticated');
-  }
-  
-  const adminDb = await getAdminDb();
-  // Inline import to avoid top-level object import in a 'use server' file.
-  const { FieldValue } = await import('firebase-admin/firestore');
-
-  const userRef = adminDb.collection('users').doc(user.id);
-  await userRef.update({
-    'progress.completedTopics': FieldValue.arrayUnion(topicId),
-  });
-}
+                                    const cookieStore = await cookies();
+                                      cookieStore.set("session", token, { httpOnly: true, secure: true });
+                                        return true;
+                                        }
+                                        
